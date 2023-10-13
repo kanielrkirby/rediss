@@ -1,17 +1,26 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "PTTL",
+  "summary": "Returns the expiration time in milliseconds of a key.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
+  "group": "generic",
+  "since": "2.6.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "pttlCommand",
+  "history": [
+    [
+      "2.8.0",
+      "Added the -2 reply."
+    ]
+  ],
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "KEYSPACE"
+  ],
+  "command_tips": [
+    "NONDETERMINISTIC_OUTPUT"
   ],
   "key_specs": [
     {
@@ -36,12 +45,17 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "description": "TTL in milliseconds.",
+        "type": "integer",
+        "minimum": 0
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "description": "The key exists but has no associated expire.",
+        "const": -1
+      },
+      {
+        "description": "The key does not exist.",
+        "const": -2
       }
     ]
   },

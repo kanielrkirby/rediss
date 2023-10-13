@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
-  "complexity": "O(1)",
-  "group": "string",
+  "name": "LTRIM",
+  "summary": "Removes elements from both ends a list. Deletes the list if all elements were trimmed.",
+  "complexity": "O(N) where N is the number of elements to be removed by the operation.",
+  "group": "list",
   "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "arity": 4,
+  "function": "ltrimCommand",
   "command_flags": [
-    "READONLY",
-    "FAST"
+    "WRITE"
   ],
   "acl_categories": [
-    "STRING"
+    "LIST"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RW",
+        "DELETE"
       ],
       "begin_search": {
         "index": {
@@ -34,22 +33,21 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "const": "OK"
   },
   "arguments": [
     {
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "start",
+      "type": "integer"
+    },
+    {
+      "name": "stop",
+      "type": "integer"
     }
   ]
 }

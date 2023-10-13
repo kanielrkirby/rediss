@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "TYPE",
+  "summary": "Determines the type of value stored at a key.",
   "complexity": "O(1)",
-  "group": "string",
+  "group": "generic",
   "since": "1.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "typeCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "KEYSPACE"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -36,12 +35,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "description": "Key doesn't exist",
+        "type": "null"
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "description": "Type of the key",
+        "type": "string"
       }
     ]
   },

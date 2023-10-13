@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "LLEN",
+  "summary": "Returns the length of a list.",
   "complexity": "O(1)",
-  "group": "string",
+  "group": "list",
   "since": "1.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "llenCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "LIST"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -34,16 +33,9 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "description": "List length.",
+    "type": "integer",
+    "minimum": 0
   },
   "arguments": [
     {

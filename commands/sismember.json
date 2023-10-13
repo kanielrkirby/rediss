@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "SISMEMBER",
+  "summary": "Determines whether a member belongs to a set.",
   "complexity": "O(1)",
-  "group": "string",
+  "group": "set",
   "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "arity": 3,
+  "function": "sismemberCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "SET"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -36,12 +35,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "const": 0,
+        "description": "The element is not a member of the set, or the key does not exist."
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "const": 1,
+        "description": "The element is a member of the set."
       }
     ]
   },
@@ -50,6 +49,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "member",
+      "type": "string"
     }
   ]
 }

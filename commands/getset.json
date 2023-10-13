@@ -1,13 +1,19 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "GETSET",
+  "summary": "Returns the previous string value of a key after setting it to a new value.",
   "complexity": "O(1)",
   "group": "string",
   "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "arity": 3,
+  "function": "getsetCommand",
+  "deprecated_since": "6.2.0",
+  "replaced_by": "`SET` with the `!GET` argument",
+  "doc_flags": [
+    "DEPRECATED"
+  ],
   "command_flags": [
-    "READONLY",
+    "WRITE",
+    "DENYOOM",
     "FAST"
   ],
   "acl_categories": [
@@ -16,8 +22,9 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RW",
+        "ACCESS",
+        "UPDATE"
       ],
       "begin_search": {
         "index": {
@@ -36,11 +43,11 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
+        "description": "The old value stored at the key.",
         "type": "string"
       },
       {
-        "description": "Key does not exist.",
+        "description": "The key does not exist.",
         "type": "null"
       }
     ]
@@ -50,6 +57,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "value",
+      "type": "string"
     }
   ]
 }

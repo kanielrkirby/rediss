@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "ZCARD",
+  "summary": "Returns the number of members in a sorted set.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
+  "group": "sorted_set",
+  "since": "1.2.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "zcardCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "SORTEDSET"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -34,16 +33,8 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "description": "The cardinality (number of elements) of the sorted set, or 0 if key does not exist",
+    "type": "integer"
   },
   "arguments": [
     {

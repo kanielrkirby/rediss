@@ -1,11 +1,11 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "STRLEN",
+  "summary": "Returns the length of a string value.",
   "complexity": "O(1)",
   "group": "string",
-  "since": "1.0.0",
+  "since": "2.2.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "strlenCommand",
   "command_flags": [
     "READONLY",
     "FAST"
@@ -16,8 +16,7 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -34,16 +33,9 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "description": "The length of the string value stored at key, or 0 when key does not exist.",
+    "type": "integer",
+    "minimum": 0
   },
   "arguments": [
     {

@@ -1,13 +1,19 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "SETNX",
+  "summary": "Set the string value of a key only when the key doesn't exist.",
   "complexity": "O(1)",
   "group": "string",
   "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "arity": 3,
+  "function": "setnxCommand",
+  "deprecated_since": "2.6.12",
+  "replaced_by": "`SET` with the `NX` argument",
+  "doc_flags": [
+    "DEPRECATED"
+  ],
   "command_flags": [
-    "READONLY",
+    "WRITE",
+    "DENYOOM",
     "FAST"
   ],
   "acl_categories": [
@@ -16,8 +22,8 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "OW",
+        "INSERT"
       ],
       "begin_search": {
         "index": {
@@ -36,12 +42,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "description": "The key was set.",
+        "const": 0
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "description": "The key was not set.",
+        "const": 1
       }
     ]
   },
@@ -50,6 +56,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "value",
+      "type": "string"
     }
   ]
 }

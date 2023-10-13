@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "HLEN",
+  "summary": "Returns the number of fields in a hash.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
+  "group": "hash",
+  "since": "2.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "hlenCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "HASH"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -34,16 +33,8 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "type": "integer",
+    "description": "Number of the fields in the hash, or 0 when the key does not exist."
   },
   "arguments": [
     {

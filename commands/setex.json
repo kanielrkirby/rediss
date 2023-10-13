@@ -1,14 +1,19 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "SETEX",
+  "summary": "Sets the string value and expiration time of a key. Creates the key if it doesn't exist.",
   "complexity": "O(1)",
   "group": "string",
-  "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "since": "2.0.0",
+  "arity": 4,
+  "function": "setexCommand",
+  "deprecated_since": "2.6.12",
+  "replaced_by": "`SET` with the `EX` argument",
+  "doc_flags": [
+    "DEPRECATED"
+  ],
   "command_flags": [
-    "READONLY",
-    "FAST"
+    "WRITE",
+    "DENYOOM"
   ],
   "acl_categories": [
     "STRING"
@@ -16,8 +21,8 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "OW",
+        "UPDATE"
       ],
       "begin_search": {
         "index": {
@@ -34,22 +39,21 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "const": "OK"
   },
   "arguments": [
     {
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "seconds",
+      "type": "integer"
+    },
+    {
+      "name": "value",
+      "type": "string"
     }
   ]
 }

@@ -1,17 +1,17 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "ZSCORE",
+  "summary": "Returns the score of a member in a sorted set.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "group": "sorted_set",
+  "since": "1.2.0",
+  "arity": 3,
+  "function": "zscoreCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "SORTEDSET"
   ],
   "key_specs": [
     {
@@ -36,12 +36,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "type": "number",
+        "description": "The score of the member (a double precision floating point number). In RESP2, this is returned as string."
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "type": "null",
+        "description": "Member does not exist in the sorted set, or key does not exist."
       }
     ]
   },
@@ -50,6 +50,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "member",
+      "type": "string"
     }
   ]
 }

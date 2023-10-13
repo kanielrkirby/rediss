@@ -1,17 +1,19 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
-  "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
+  "name": "HVALS",
+  "summary": "Returns all values in a hash.",
+  "complexity": "O(N) where N is the size of the hash.",
+  "group": "hash",
+  "since": "2.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "hvalsCommand",
   "command_flags": [
-    "READONLY",
-    "FAST"
+    "READONLY"
   ],
   "acl_categories": [
-    "STRING"
+    "HASH"
+  ],
+  "command_tips": [
+    "NONDETERMINISTIC_OUTPUT_ORDER"
   ],
   "key_specs": [
     {
@@ -34,16 +36,11 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "type": "array",
+    "description": "List of values in the hash, or an empty list when the key does not exist.",
+    "items": {
+      "type": "string"
+    }
   },
   "arguments": [
     {

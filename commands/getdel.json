@@ -1,13 +1,13 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "GETDEL",
+  "summary": "Returns the string value of a key after deleting the key.",
   "complexity": "O(1)",
   "group": "string",
-  "since": "1.0.0",
+  "since": "6.2.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "getdelCommand",
   "command_flags": [
-    "READONLY",
+    "WRITE",
     "FAST"
   ],
   "acl_categories": [
@@ -16,8 +16,9 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RW",
+        "ACCESS",
+        "DELETE"
       ],
       "begin_search": {
         "index": {
@@ -40,7 +41,7 @@
         "type": "string"
       },
       {
-        "description": "Key does not exist.",
+        "description": "The key does not exist.",
         "type": "null"
       }
     ]

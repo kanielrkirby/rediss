@@ -1,17 +1,16 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
-  "complexity": "O(1)",
-  "group": "string",
+  "name": "LINDEX",
+  "summary": "Returns an element from a list by its index.",
+  "complexity": "O(N) where N is the number of elements to traverse to get to the element at index. This makes asking for the first or the last element of the list O(1).",
+  "group": "list",
   "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "arity": 3,
+  "function": "lindexCommand",
   "command_flags": [
-    "READONLY",
-    "FAST"
+    "READONLY"
   ],
   "acl_categories": [
-    "STRING"
+    "LIST"
   ],
   "key_specs": [
     {
@@ -36,12 +35,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "type": "null",
+        "description": "Index is out of range"
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "description": "The requested element",
+        "type": "string"
       }
     ]
   },
@@ -50,6 +49,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "index",
+      "type": "integer"
     }
   ]
 }

@@ -1,17 +1,19 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
-  "complexity": "O(1)",
-  "group": "string",
+  "name": "SMEMBERS",
+  "summary": "Returns all members of a set.",
+  "complexity": "O(N) where N is the set cardinality.",
+  "group": "set",
   "since": "1.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "sinterCommand",
   "command_flags": [
-    "READONLY",
-    "FAST"
+    "READONLY"
   ],
   "acl_categories": [
-    "STRING"
+    "SET"
+  ],
+  "command_tips": [
+    "NONDETERMINISTIC_OUTPUT_ORDER"
   ],
   "key_specs": [
     {
@@ -34,16 +36,12 @@
     }
   ],
   "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
+    "type": "array",
+    "description": "All elements of the set.",
+    "uniqueItems": true,
+    "items": {
+      "type": "string"
+    }
   },
   "arguments": [
     {

@@ -1,17 +1,17 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "GETBIT",
+  "summary": "Returns a bit value by offset.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "group": "bitmap",
+  "since": "2.2.0",
+  "arity": 3,
+  "function": "getbitCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "BITMAP"
   ],
   "key_specs": [
     {
@@ -34,14 +34,13 @@
     }
   ],
   "reply_schema": {
+    "description": "The bit value stored at offset.",
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "const": 0
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "const": 1
       }
     ]
   },
@@ -50,6 +49,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "offset",
+      "type": "integer"
     }
   ]
 }

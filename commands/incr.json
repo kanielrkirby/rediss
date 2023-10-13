@@ -1,13 +1,14 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "INCR",
+  "summary": "Increments the integer value of a key by one. Uses 0 as initial value if the key doesn't exist.",
   "complexity": "O(1)",
   "group": "string",
   "since": "1.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "incrCommand",
   "command_flags": [
-    "READONLY",
+    "WRITE",
+    "DENYOOM",
     "FAST"
   ],
   "acl_categories": [
@@ -16,8 +17,9 @@
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RW",
+        "ACCESS",
+        "UPDATE"
       ],
       "begin_search": {
         "index": {
@@ -33,23 +35,15 @@
       }
     }
   ],
-  "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
-  },
   "arguments": [
     {
       "name": "key",
       "type": "key",
       "key_spec_index": 0
     }
-  ]
+  ],
+  "reply_schema": {
+    "description": "The value of key after the increment",
+    "type": "integer"
+  }
 }

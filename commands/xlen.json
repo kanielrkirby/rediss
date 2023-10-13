@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "XLEN",
+  "summary": "Return the number of messages in a stream.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
+  "group": "stream",
+  "since": "5.0.0",
   "arity": 2,
-  "function": "getCommand",
+  "function": "xlenCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "STREAM"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -33,23 +32,16 @@
       }
     }
   ],
-  "reply_schema": {
-    "oneOf": [
-      {
-        "description": "The value of the key.",
-        "type": "string"
-      },
-      {
-        "description": "Key does not exist.",
-        "type": "null"
-      }
-    ]
-  },
   "arguments": [
     {
       "name": "key",
       "type": "key",
       "key_spec_index": 0
     }
-  ]
+  ],
+  "reply_schema": {
+    "description": "The number of entries of the stream at key",
+    "type": "integer",
+    "minimum": 0
+  }
 }

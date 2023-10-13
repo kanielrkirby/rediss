@@ -1,17 +1,17 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "HGET",
+  "summary": "Returns the value of a field in a hash.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "group": "hash",
+  "since": "2.0.0",
+  "arity": 3,
+  "function": "hgetCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "HASH"
   ],
   "key_specs": [
     {
@@ -36,11 +36,11 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
+        "description": "The value associated with the field.",
         "type": "string"
       },
       {
-        "description": "Key does not exist.",
+        "description": "If the field is not present in the hash or key does not exist.",
         "type": "null"
       }
     ]
@@ -50,6 +50,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "field",
+      "type": "string"
     }
   ]
 }

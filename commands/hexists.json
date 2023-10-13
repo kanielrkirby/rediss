@@ -1,23 +1,22 @@
 {
-  "name": "GET",
-  "summary": "Returns the string value of a key.",
+  "name": "HEXISTS",
+  "summary": "Determines whether a field exists in a hash.",
   "complexity": "O(1)",
-  "group": "string",
-  "since": "1.0.0",
-  "arity": 2,
-  "function": "getCommand",
+  "group": "hash",
+  "since": "2.0.0",
+  "arity": 3,
+  "function": "hexistsCommand",
   "command_flags": [
     "READONLY",
     "FAST"
   ],
   "acl_categories": [
-    "STRING"
+    "HASH"
   ],
   "key_specs": [
     {
       "flags": [
-        "RO",
-        "ACCESS"
+        "RO"
       ],
       "begin_search": {
         "index": {
@@ -36,12 +35,12 @@
   "reply_schema": {
     "oneOf": [
       {
-        "description": "The value of the key.",
-        "type": "string"
+        "description": "The hash does not contain the field, or key does not exist.",
+        "const": 0
       },
       {
-        "description": "Key does not exist.",
-        "type": "null"
+        "description": "The hash contains the field.",
+        "const": 1
       }
     ]
   },
@@ -50,6 +49,10 @@
       "name": "key",
       "type": "key",
       "key_spec_index": 0
+    },
+    {
+      "name": "field",
+      "type": "string"
     }
   ]
 }
