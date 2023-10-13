@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-//	"io"
+	//	"io"
 	"net"
-//	"os"
+	// "os"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	}
 	defer l.Close()
 
-  // Accept
+	// Accept
 	conn, err := l.Accept()
 	if err != nil {
 		fmt.Println(err)
@@ -25,18 +25,20 @@ func main() {
 
 	defer conn.Close()
 
-  // Read
-	for {
-    resp := NewResp(conn)
+	writer := NewWriter(conn)
 
-    value, err := resp.Read()
+	// Read
+	for {
+		resp := NewResp(conn)
+
+		value, err := resp.Read()
 		if err != nil {
-      fmt.Println(err)
+			fmt.Println(err)
 			return
 		}
 
-    fmt.Println("value:", value)
+		fmt.Println("value:", value)
 
-		conn.Write([]byte("+OK\r\n"))
+		writer.Write(Value{typ: "string", str: "OK"})
 	}
 }
