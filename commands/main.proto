@@ -46,7 +46,9 @@ message Command {
         string name = 1;
         string type = 2;
         int32 key_spec_index = 3;
-        repeated Argument arguments = 4;
+        string token = 4;
+        bool optional = 5;
+        repeated Argument arguments = 6;
     }
 
     string name = 1;
