@@ -1,15 +1,19 @@
 package commands
 
-func DEL(args []Value) Value {
+import (
+  "github.com/piratey7007/rediss/resp"
+)
+
+func DEL(args []resp.Value) resp.Value {
   if len(args) != 1 {
-    return Value{typ: "error", str: "ERR wrong number of arguments for 'del' command"}
+    return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'del' command"}
   }
 
-  key := args[0].bulk
+  key := args[0].Bulk
 
   SETsMu.Lock()
   delete(SETs, key)
   SETsMu.Unlock()
 
-  return Value{typ: "string", str: "OK"}
+  return resp.Value{Typ: "string", Str: "OK"}
 }
