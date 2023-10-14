@@ -1,19 +1,21 @@
 package commands
 
+import (
+  "github.com/piratey7007/rediss/resp"
+)
 
-
-func set(args []Value) Value {
+func set(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return Value{typ: "error", str: "ERR wrong number of arguments for 'set' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'set' command"}
 	}
 
-	key := args[0].bulk
-	value := args[1].bulk
+	key := args[0].Bulk
+	value := args[1].Bulk
 
 	SETsMu.Lock()
 	SETs[key] = value
 	SETsMu.Unlock()
 
-	return Value{typ: "string", str: "OK"}
+	return resp.Value{Typ: "string", Str: "OK"}
 }
 

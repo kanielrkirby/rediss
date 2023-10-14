@@ -1,12 +1,13 @@
 package commands
 
+import (
+  "github.com/piratey7007/rediss/resp"
+)
 
-
-
-func ping(args []Value) Value {
+func ping(args []resp.Value) resp.Value {
 	if len(args) == 0 {
-		return Value{typ: "string", str: "PONG"}
+		return resp.Value{Typ: "string", Str: "PONG"}
 	}
 
-	return Value{typ: "string", str: args[0].bulk}
+	return resp.Value{Typ: "string", Str: args[0].Bulk}
 }
