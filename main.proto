@@ -3,6 +3,7 @@ syntax = "proto3";
 package command;
 
 import "google/protobuf/struct.proto";
+import "google/protobuf/any.proto";
 
 option go_package = "github.com/piratey7007/rediss/main";
 
@@ -40,7 +41,7 @@ message Command {
       repeated Item items = 5;
       string const = 6;
       bool additionalProperties = 7;
-      Properties properties = 8;
+      google.protobuf.Struct properties = 8;
     }
 
     repeated Item anyOf = 1;
@@ -52,7 +53,7 @@ message Command {
     int32 minItems = 6;
     string const = 7;
     bool additionalProperties = 8;
-    Properties properties = 9;
+    google.protobuf.Struct properties = 9;
     repeated Item items = 10;
   }
 
@@ -65,17 +66,6 @@ message Command {
     bool multiple = 6;
     repeated Argument arguments = 7;
   }
-
-  message Properties {
-    message PropertyValue {
-      oneof value {
-        string stringValue = 1;
-        Properties propertiesValue = 2;
-      }
-    }
-    map<string, PropertyValue> properties = 1;
-  }
-
 
   message History {
     repeated google.protobuf.ListValue history = 1;
