@@ -15,8 +15,10 @@
   "reply_schema": {
     "type": "array",
     "description": "A list of subcommands and their description",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

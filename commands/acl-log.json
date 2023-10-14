@@ -25,42 +25,44 @@
       {
         "description": "In case `RESET` was not given, a list of recent ACL security events.",
         "type": "array",
-        "items": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "count": {
-              "type": "integer"
-            },
-            "reason": {
-              "type": "string"
-            },
-            "context": {
-              "type": "string"
-            },
-            "object": {
-              "type": "string"
-            },
-            "username": {
-              "type": "string"
-            },
-            "age-seconds": {
-              "type": "number"
-            },
-            "client-info": {
-              "type": "string"
-            },
-            "entry-id": {
-              "type": "integer"
-            },
-            "timestamp-created": {
-              "type": "integer"
-            },
-            "timestamp-last-updated": {
-              "type": "integer"
+        "items": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "type": "integer"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "context": {
+                "type": "string"
+              },
+              "object": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "age-seconds": {
+                "type": "number"
+              },
+              "client-info": {
+                "type": "string"
+              },
+              "entry-id": {
+                "type": "integer"
+              },
+              "timestamp-created": {
+                "type": "integer"
+              },
+              "timestamp-last-updated": {
+                "type": "integer"
+              }
             }
           }
-        }
+        ]
       },
       {
         "const": "OK",

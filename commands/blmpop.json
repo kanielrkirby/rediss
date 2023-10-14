@@ -55,9 +55,11 @@
             "description": "Array of popped elements.",
             "type": "array",
             "minItems": 1,
-            "items": {
-              "type": "string"
-            }
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
           }
         ]
       }

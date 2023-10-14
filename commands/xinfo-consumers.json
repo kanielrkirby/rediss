@@ -57,23 +57,25 @@
     "description": "Array list of consumers",
     "type": "array",
     "uniqueItems": true,
-    "items": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "pending": {
-          "type": "integer"
-        },
-        "idle": {
-          "type": "integer"
-        },
-        "inactive": {
-          "type": "integer"
+    "items": [
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "pending": {
+            "type": "integer"
+          },
+          "idle": {
+            "type": "integer"
+          },
+          "inactive": {
+            "type": "integer"
+          }
         }
       }
-    }
+    ]
   }
 }

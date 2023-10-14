@@ -71,9 +71,11 @@
       {
         "description": "list of set members",
         "type": "array",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       }
     ]
   }

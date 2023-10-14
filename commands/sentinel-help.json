@@ -16,8 +16,10 @@
   "reply_schema": {
     "type": "array",
     "description": "Helpful text about subcommands.",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

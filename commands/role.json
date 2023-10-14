@@ -34,25 +34,27 @@
           {
             "description": "connected replicas",
             "type": "array",
-            "items": {
-              "type": "array",
-              "minItems": 3,
-              "maxItems": 3,
-              "items": [
-                {
-                  "description": "replica ip",
-                  "type": "string"
-                },
-                {
-                  "description": "replica port",
-                  "type": "string"
-                },
-                {
-                  "description": "last acknowledged replication offset",
-                  "type": "string"
-                }
-              ]
-            }
+            "items": [
+              {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": [
+                  {
+                    "description": "replica ip",
+                    "type": "string"
+                  },
+                  {
+                    "description": "replica port",
+                    "type": "string"
+                  },
+                  {
+                    "description": "last acknowledged replication offset",
+                    "type": "string"
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -122,9 +124,11 @@
           {
             "description": "list of master names monitored by this sentinel instance",
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
           }
         ]
       }

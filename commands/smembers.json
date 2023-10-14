@@ -39,9 +39,11 @@
     "type": "array",
     "description": "All elements of the set.",
     "uniqueItems": true,
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   },
   "arguments": [
     {

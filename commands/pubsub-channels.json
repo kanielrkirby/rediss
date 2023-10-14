@@ -23,8 +23,10 @@
     "description": "a list of active channels, optionally matching the specified pattern",
     "type": "array",
     "uniqueItems": true,
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

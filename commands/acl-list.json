@@ -17,8 +17,10 @@
   "reply_schema": {
     "type": "array",
     "description": "A list of currently active ACL rules",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

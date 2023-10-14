@@ -55,21 +55,23 @@
       {
         "type": "array",
         "description": "List of popped elements and scores when 'COUNT' is specified.",
-        "items": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "string",
-              "description": "Popped element."
-            },
-            {
-              "type": "number",
-              "description": "Score."
-            }
-          ]
-        }
+        "items": [
+          {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+              {
+                "type": "string",
+                "description": "Popped element."
+              },
+              {
+                "type": "number",
+                "description": "Score."
+              }
+            ]
+          }
+        ]
       }
     ]
   },

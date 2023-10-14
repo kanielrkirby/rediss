@@ -39,9 +39,11 @@
     "type": "array",
     "description": "List with the members of the resulting set.",
     "uniqueItems": true,
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   },
   "arguments": [
     {

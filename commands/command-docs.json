@@ -104,18 +104,20 @@
           "doc_flags": {
             "description": "an array of documentation flags",
             "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "description": "the command is deprecated.",
-                  "const": "deprecated"
-                },
-                {
-                  "description": "a system command that isn't meant to be called by users.",
-                  "const": "syscmd"
-                }
-              ]
-            }
+            "items": [
+              {
+                "oneOf": [
+                  {
+                    "description": "the command is deprecated.",
+                    "const": "deprecated"
+                  },
+                  {
+                    "description": "a system command that isn't meant to be called by users.",
+                    "const": "syscmd"
+                  }
+                ]
+              }
+            ]
           },
           "deprecated_since": {
             "description": "the Redis version that deprecated the command (or for module commands, the module version)",
@@ -128,64 +130,68 @@
           "history": {
             "description": "an array of historical notes describing changes to the command's behavior or arguments.",
             "type": "array",
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "type": "string",
-                  "description": "The Redis version that the entry applies to."
-                },
-                {
-                  "type": "string",
-                  "description": "The description of the change."
-                }
-              ]
-            }
+            "items": [
+              {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": [
+                  {
+                    "type": "string",
+                    "description": "The Redis version that the entry applies to."
+                  },
+                  {
+                    "type": "string",
+                    "description": "The description of the change."
+                  }
+                ]
+              }
+            ]
           },
           "arguments": {
             "description": "an array of maps that describe the command's arguments.",
             "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "display_text": {
-                  "type": "string"
-                },
-                "key_spec_index": {
-                  "type": "integer"
-                },
-                "token": {
-                  "type": "string"
-                },
-                "summary": {
-                  "type": "string"
-                },
-                "since": {
-                  "type": "string"
-                },
-                "deprecated_since": {
-                  "type": "string"
-                },
-                "flags": {
-                  "type": "array",
-                  "items": {
+            "items": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
                     "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "display_text": {
+                    "type": "string"
+                  },
+                  "key_spec_index": {
+                    "type": "integer"
+                  },
+                  "token": {
+                    "type": "string"
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "since": {
+                    "type": "string"
+                  },
+                  "deprecated_since": {
+                    "type": "string"
+                  },
+                  "flags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "arguments": {
+                    "type": "array"
                   }
-                },
-                "arguments": {
-                  "type": "array"
                 }
               }
-            }
+            ]
           },
           "reply_schema": {
             "description": "command reply schema",

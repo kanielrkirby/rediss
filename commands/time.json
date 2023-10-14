@@ -19,9 +19,11 @@
     "description": "Array containing two elements: Unix time in seconds and microseconds.",
     "minItems": 2,
     "maxItems": 2,
-    "items": {
-      "type": "string",
-      "pattern": "[0-9]+"
-    }
+    "items": [
+      {
+        "type": "string",
+        "pattern": "[0-9]+"
+      }
+    ]
   }
 }

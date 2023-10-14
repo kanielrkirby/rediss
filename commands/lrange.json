@@ -50,8 +50,10 @@
   "reply_schema": {
     "description": "List of elements in the specified range",
     "type": "array",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

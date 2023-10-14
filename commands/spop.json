@@ -57,9 +57,11 @@
         "type": "array",
         "description": "List to the removed members when 'COUNT' is given.",
         "uniqueItems": true,
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       }
     ]
   },

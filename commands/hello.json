@@ -48,27 +48,29 @@
       },
       "modules": {
         "type": "array",
-        "items": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "ver": {
-              "type": "integer"
-            },
-            "path": {
-              "type": "string"
-            },
-            "args": {
-              "type": "array",
-              "items": {
+        "items": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
                 "type": "string"
+              },
+              "ver": {
+                "type": "integer"
+              },
+              "path": {
+                "type": "string"
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
-        }
+        ]
       }
     }
   },

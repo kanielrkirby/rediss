@@ -46,9 +46,11 @@
         "description": "If the COUNT option is given, an array of integers representing the matching elements (empty if there are no matches)",
         "type": "array",
         "uniqueItems": true,
-        "items": {
-          "type": "integer"
-        }
+        "items": [
+          {
+            "type": "integer"
+          }
+        ]
       }
     ]
   },

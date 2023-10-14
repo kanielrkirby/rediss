@@ -48,28 +48,32 @@
       {
         "description": "A list of fields. Returned in case `COUNT` was used.",
         "type": "array",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       },
       {
         "description": "Fields and their values. Returned in case `COUNT` and `WITHVALUES` were used. In RESP2 this is returned as a flat array.",
         "type": "array",
-        "items": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "description": "Field",
-              "type": "string"
-            },
-            {
-              "description": "Value",
-              "type": "string"
-            }
-          ]
-        }
+        "items": [
+          {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+              {
+                "description": "Field",
+                "type": "string"
+              },
+              {
+                "description": "Value",
+                "type": "string"
+              }
+            ]
+          }
+        ]
       }
     ]
   },

@@ -20,12 +20,14 @@
   "reply_schema": {
     "type": "array",
     "description": "List of monitored replicas, and their state.",
-    "items": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
+    "items": [
+      {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
       }
-    }
+    ]
   },
   "arguments": [
     {

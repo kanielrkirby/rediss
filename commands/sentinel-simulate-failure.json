@@ -20,9 +20,11 @@
       {
         "description": "Supported simulates flags. Returned in case `HELP` was used.",
         "type": "array",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       }
     ]
   },

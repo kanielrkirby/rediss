@@ -55,21 +55,23 @@
             "description": "Popped members and their scores.",
             "type": "array",
             "uniqueItems": true,
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "description": "Member",
-                  "type": "string"
-                },
-                {
-                  "description": "Score",
-                  "type": "number"
-                }
-              ]
-            }
+            "items": [
+              {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": [
+                  {
+                    "description": "Member",
+                    "type": "string"
+                  },
+                  {
+                    "description": "Score",
+                    "type": "number"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

@@ -41,9 +41,11 @@
     "type": "array",
     "description": "List of elements in the specified score range.",
     "uniqueItems": true,
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   },
   "arguments": [
     {

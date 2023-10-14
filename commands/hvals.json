@@ -38,9 +38,11 @@
   "reply_schema": {
     "type": "array",
     "description": "List of values in the hash, or an empty list when the key does not exist.",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   },
   "arguments": [
     {

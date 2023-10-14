@@ -49,35 +49,37 @@
         "properties": {
           "matches": {
             "type": "array",
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": [
-                {
-                  "type": "array",
-                  "description": "Matched range in the first string.",
-                  "minItems": 2,
-                  "maxItems": 2,
-                  "items": {
-                    "type": "integer"
+            "items": [
+              {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 3,
+                "items": [
+                  {
+                    "type": "array",
+                    "description": "Matched range in the first string.",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "description": "Matched range in the second string.",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "integer"
+                    }
                   }
-                },
-                {
-                  "type": "array",
-                  "description": "Matched range in the second string.",
-                  "minItems": 2,
-                  "maxItems": 2,
-                  "items": {
-                    "type": "integer"
-                  }
+                ],
+                "additionalItems": {
+                  "type": "integer",
+                  "description": "The length of the match when 'WITHMATCHLEN' is given."
                 }
-              ],
-              "additionalItems": {
-                "type": "integer",
-                "description": "The length of the match when 'WITHMATCHLEN' is given."
               }
-            }
+            ]
           },
           "len": {
             "type": "integer",

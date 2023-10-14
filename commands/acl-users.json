@@ -17,8 +17,10 @@
   "reply_schema": {
     "type": "array",
     "description": "List of existing ACL users",
-    "items": {
-      "type": "string"
-    }
+    "items": [
+      {
+        "type": "string"
+      }
+    ]
   }
 }

@@ -39,27 +39,31 @@
         "description": "The result of union when 'WITHSCORES' is not used.",
         "type": "array",
         "uniqueItems": true,
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       },
       {
         "description": "The result of union when 'WITHSCORES' is used.",
         "type": "array",
         "uniqueItems": true,
-        "items": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            }
-          ]
-        }
+        "items": [
+          {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          }
+        ]
       }
     ]
   },

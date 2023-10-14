@@ -18,9 +18,11 @@
   "reply_schema": {
     "description": "List of keys from the given Redis command.",
     "type": "array",
-    "items": {
-      "type": "string"
-    },
+    "items": [
+      {
+        "type": "string"
+      }
+    ],
     "uniqueItems": true
   },
   "arguments": [

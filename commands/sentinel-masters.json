@@ -15,11 +15,13 @@
   "reply_schema": {
     "type": "array",
     "description": "List of monitored Redis masters, and their state.",
-    "items": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
+    "items": [
+      {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
       }
-    }
+    ]
   }
 }

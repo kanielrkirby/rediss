@@ -39,15 +39,19 @@
         "properties": {
           "flags": {
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
           },
           "passwords": {
             "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
           },
           "commands": {
             "description": "root selector's commands",
@@ -63,21 +67,23 @@
           },
           "selectors": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "commands": {
-                  "type": "string"
-                },
-                "keys": {
-                  "type": "string"
-                },
-                "channels": {
-                  "type": "string"
+            "items": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "commands": {
+                    "type": "string"
+                  },
+                  "keys": {
+                    "type": "string"
+                  },
+                  "channels": {
+                    "type": "string"
+                  }
                 }
               }
-            }
+            ]
           }
         }
       },

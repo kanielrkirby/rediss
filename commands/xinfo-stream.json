@@ -108,9 +108,11 @@
                   {
                     "description": "data",
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "items": [
+                      {
+                        "type": "string"
+                      }
+                    ]
                   }
                 ]
               }
@@ -135,9 +137,11 @@
                   {
                     "description": "data",
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "items": [
+                      {
+                        "type": "string"
+                      }
+                    ]
                   }
                 ]
               }
@@ -185,148 +189,152 @@
             "description": "all the entries of the stream",
             "type": "array",
             "uniqueItems": true,
-            "items": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 2,
-              "items": [
-                {
-                  "description": "entry ID",
-                  "type": "string",
-                  "pattern": "[0-9]+-[0-9]+"
-                },
-                {
-                  "description": "data",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+            "items": [
+              {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": [
+                  {
+                    "description": "entry ID",
+                    "type": "string",
+                    "pattern": "[0-9]+-[0-9]+"
+                  },
+                  {
+                    "description": "data",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
-                }
-              ]
-            }
+                ]
+              }
+            ]
           },
           "groups": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "description": "group name",
-                  "type": "string"
-                },
-                "last-delivered-id": {
-                  "description": "last entry ID that was delivered to a consumer",
-                  "type": "string",
-                  "pattern": "[0-9]+-[0-9]+"
-                },
-                "entries-read": {
-                  "description": "total number of entries ever read by consumers in the group",
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "integer"
-                    }
-                  ]
-                },
-                "lag": {
-                  "description": "number of entries left to be consumed from the stream",
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "integer"
-                    }
-                  ]
-                },
-                "pel-count": {
-                  "description": "total number of unacknowledged entries",
-                  "type": "integer"
-                },
-                "pending": {
-                  "description": "data about all of the unacknowledged entries",
-                  "type": "array",
-                  "items": {
-                    "type": "array",
-                    "minItems": 4,
-                    "maxItems": 4,
-                    "items": [
+            "items": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "description": "group name",
+                    "type": "string"
+                  },
+                  "last-delivered-id": {
+                    "description": "last entry ID that was delivered to a consumer",
+                    "type": "string",
+                    "pattern": "[0-9]+-[0-9]+"
+                  },
+                  "entries-read": {
+                    "description": "total number of entries ever read by consumers in the group",
+                    "oneOf": [
                       {
-                        "description": "Entry ID",
-                        "type": "string",
-                        "pattern": "[0-9]+-[0-9]+"
+                        "type": "null"
                       },
                       {
-                        "description": "Consumer name",
-                        "type": "string"
-                      },
-                      {
-                        "description": "Delivery timestamp",
-                        "type": "integer"
-                      },
-                      {
-                        "description": "Delivery count",
                         "type": "integer"
                       }
                     ]
-                  }
-                },
-                "consumers": {
-                  "description": "data about all of the consumers of the group",
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                      "active-time": {
-                        "type": "integer",
-                        "description": "Last time this consumer was active (successful reading/claiming).",
-                        "minimum": 0
+                  },
+                  "lag": {
+                    "description": "number of entries left to be consumed from the stream",
+                    "oneOf": [
+                      {
+                        "type": "null"
                       },
-                      "name": {
-                        "description": "consumer name",
-                        "type": "string"
-                      },
-                      "seen-time": {
-                        "description": "timestamp of the last interaction attempt of the consumer",
+                      {
                         "type": "integer"
-                      },
-                      "pel-count": {
-                        "description": "number of unacknowledged entries that belong to the consumer",
-                        "type": "integer"
-                      },
-                      "pending": {
-                        "description": "data about the unacknowledged entries",
-                        "type": "array",
-                        "items": {
+                      }
+                    ]
+                  },
+                  "pel-count": {
+                    "description": "total number of unacknowledged entries",
+                    "type": "integer"
+                  },
+                  "pending": {
+                    "description": "data about all of the unacknowledged entries",
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "minItems": 4,
+                      "maxItems": 4,
+                      "items": [
+                        {
+                          "description": "Entry ID",
+                          "type": "string",
+                          "pattern": "[0-9]+-[0-9]+"
+                        },
+                        {
+                          "description": "Consumer name",
+                          "type": "string"
+                        },
+                        {
+                          "description": "Delivery timestamp",
+                          "type": "integer"
+                        },
+                        {
+                          "description": "Delivery count",
+                          "type": "integer"
+                        }
+                      ]
+                    }
+                  },
+                  "consumers": {
+                    "description": "data about all of the consumers of the group",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "active-time": {
+                          "type": "integer",
+                          "description": "Last time this consumer was active (successful reading/claiming).",
+                          "minimum": 0
+                        },
+                        "name": {
+                          "description": "consumer name",
+                          "type": "string"
+                        },
+                        "seen-time": {
+                          "description": "timestamp of the last interaction attempt of the consumer",
+                          "type": "integer"
+                        },
+                        "pel-count": {
+                          "description": "number of unacknowledged entries that belong to the consumer",
+                          "type": "integer"
+                        },
+                        "pending": {
+                          "description": "data about the unacknowledged entries",
                           "type": "array",
-                          "minItems": 3,
-                          "maxItems": 3,
-                          "items": [
-                            {
-                              "description": "Entry ID",
-                              "type": "string",
-                              "pattern": "[0-9]+-[0-9]+"
-                            },
-                            {
-                              "description": "Delivery timestamp",
-                              "type": "integer"
-                            },
-                            {
-                              "description": "Delivery count",
-                              "type": "integer"
-                            }
-                          ]
+                          "items": {
+                            "type": "array",
+                            "minItems": 3,
+                            "maxItems": 3,
+                            "items": [
+                              {
+                                "description": "Entry ID",
+                                "type": "string",
+                                "pattern": "[0-9]+-[0-9]+"
+                              },
+                              {
+                                "description": "Delivery timestamp",
+                                "type": "integer"
+                              },
+                              {
+                                "description": "Delivery count",
+                                "type": "integer"
+                              }
+                            ]
+                          }
                         }
                       }
                     }
                   }
                 }
               }
-            }
+            ]
           }
         }
       }

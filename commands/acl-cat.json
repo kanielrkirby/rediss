@@ -18,16 +18,20 @@
       {
         "type": "array",
         "description": "In case `category` was not given, a list of existing ACL categories",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       },
       {
         "type": "array",
         "description": "In case `category` was given, list of commands that fall under the provided ACL category",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       }
     ]
   },

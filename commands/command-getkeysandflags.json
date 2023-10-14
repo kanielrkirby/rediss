@@ -19,25 +19,27 @@
     "description": "List of keys from the given Redis command and their usage flags.",
     "type": "array",
     "uniqueItems": true,
-    "items": {
-      "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
-      "items": [
-        {
-          "description": "Key name",
-          "type": "string"
-        },
-        {
-          "description": "Set of key flags",
-          "type": "array",
-          "minItems": 1,
-          "items": {
+    "items": [
+      {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          {
+            "description": "Key name",
             "type": "string"
+          },
+          {
+            "description": "Set of key flags",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
           }
-        }
-      ]
-    }
+        ]
+      }
+    ]
   },
   "arguments": [
     {

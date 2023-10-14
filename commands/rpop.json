@@ -53,9 +53,11 @@
       {
         "type": "array",
         "description": "When 'COUNT' was given, list of popped elements.",
-        "items": {
-          "type": "string"
-        }
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
       }
     ]
   },
