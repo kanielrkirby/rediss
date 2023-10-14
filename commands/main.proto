@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package command;
 
+option go_package = "github.com/piratey7007/rediss/main";
+
 message Command {
     message KeySpec {
         message BeginSearch {
@@ -28,18 +30,23 @@ message Command {
     }
 
     message ReplySchema {
-        message OneOf {
-            string description = 1;
+        message Item {
             string type = 2;
+            string description = 1;
+            int32 maxItems = 3;
+            int32 minItems = 4;
+            repeated Item items = 5;
         }
 
-        repeated OneOf oneOf = 1;
+        repeated Item AnyOf = 1;
+        repeated Item OneOf = 2;
     }
 
     message Argument {
         string name = 1;
         string type = 2;
         int32 key_spec_index = 3;
+        repeated Argument arguments = 4;
     }
 
     string name = 1;
