@@ -1,21 +1,25 @@
 package commands
 
-func hget(args []Value) Value {
+import (
+  "github.com/piratey7007/rediss/resp"
+)
+
+func hget(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return Value{typ: "error", str: "ERR wrong number of arguments for 'hget' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hget' command"}
 	}
 
-	hash := args[0].bulk
-	key := args[1].bulk
+	hash := args[0].Bulk
+	key := args[1].Bulk
 
 	HSETsMu.RLock()
 	value, ok := HSETs[hash][key]
 	HSETsMu.RUnlock()
 
 	if !ok {
-		return Value{typ: "null"}
+		return resp.Value{Typ: "null"}
 	}
 
-	return Value{typ: "bulk", bulk: value}
+	return resp.Value{Typ: "Bulk", Bulk: value}
 }
 

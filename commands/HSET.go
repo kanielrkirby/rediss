@@ -1,13 +1,17 @@
 package commands
 
-func hset(args []Value) Value {
+import (
+  "github.com/piratey7007/rediss/resp"
+)
+
+func hset(args []resp.Value) resp.Value {
 	if len(args) != 3 {
-		return Value{typ: "error", str: "ERR wrong number of arguments for 'hset' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hset' command"}
 	}
 
-	hash := args[0].bulk
-	key := args[1].bulk
-	value := args[2].bulk
+	hash := args[0].Bulk
+	key := args[1].Bulk
+	value := args[2].Bulk
 
 	HSETsMu.Lock()
 	if _, ok := HSETs[hash]; !ok {
@@ -16,6 +20,6 @@ func hset(args []Value) Value {
 	HSETs[hash][key] = value
 	HSETsMu.Unlock()
 
-	return Value{typ: "string", str: "OK"}
+	return resp.Value{Typ: "string", Str: "OK"}
 }
 

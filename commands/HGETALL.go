@@ -1,26 +1,29 @@
 package commands
 
+import (
+  "github.com/piratey7007/rediss/resp"
+)
 
-func hgetall(args []Value) Value {
+func hgetall(args []resp.Value) resp.Value {
 	if len(args) != 1 {
-		return Value{typ: "error", str: "ERR wrong number of arguments for 'hgetall' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hgetall' command"}
 	}
 
-	hash := args[0].bulk
+	hash := args[0].Bulk
 
 	HSETsMu.RLock()
 	value, ok := HSETs[hash]
 	HSETsMu.RUnlock()
 
 	if !ok {
-		return Value{typ: "null"}
+		return resp.Value{Typ: "null"}
 	}
 
-	values := []Value{}
+	values := []resp.Value{}
 	for k, v := range value {
-		values = append(values, Value{typ: "bulk", bulk: k})
-		values = append(values, Value{typ: "bulk", bulk: v})
+		values = append(values, resp.Value{Typ: "bulk", Bulk: k})
+		values = append(values, resp.Value{Typ: "bulk", Bulk: v})
 	}
 
-	return Value{typ: "array", array: values}
+	return resp.Value{Typ: "array", Array: values}
 }
