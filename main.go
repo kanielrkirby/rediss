@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net"
 	"strings"
+  commands "github.com/piratey7007/rediss/commands"
+  "github.com/piratey7007/rediss/resp"
 )
 
 func main() {
@@ -27,7 +29,7 @@ func main() {
 		command := strings.ToUpper(value.array[0].bulk)
 		args := value.array[1:]
 
-		handler, ok := Handlers[command]
+		handler, ok := commands[command]
 		if !ok {
 			fmt.Println("Invalid command: ", command)
 			return

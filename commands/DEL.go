@@ -1,6 +1,6 @@
 package commands
 
-func del(args []Value) Value {
+func DEL(args []Value) Value {
   if len(args) != 1 {
     return Value{typ: "error", str: "ERR wrong number of arguments for 'del' command"}
   }

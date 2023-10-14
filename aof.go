@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 	"time"
+  "github.com/piratey7007/rediss/resp"
 )
 
 type Aof struct {
@@ -13,6 +14,7 @@ type Aof struct {
 	rd   *bufio.Reader
 	mu   sync.Mutex
 }
+type Value = resp.Value
 
 func NewAof(path string) (*Aof, error) {
   f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0666)
@@ -66,7 +68,7 @@ func (aof *Aof) Read(fn func(value Value)) error {
 
 	aof.file.Seek(0, io.SeekStart)
 
-	reader := NewResp(aof.file)
+	reader := resp.NewResp(aof.file)
 
 	for {
 		value, err := reader.Read()
