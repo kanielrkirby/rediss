@@ -7,4 +7,4 @@ import (
 
 var SETs = map[string]string{}
 var SETsMu = sync.RWMutex{}
-
+type Value = resp.Value
