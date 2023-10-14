@@ -1,4 +1,0 @@
-
-DELUSER4Deletes ACL users, and terminates their connections.1O(1) amortized time considering the typical user."ACL2server:6.0.0@ýÿÿÿÿÿÿÿÿJ
-aclCommandRADMINRNOSCRIPTRLOADINGRSTALERSENTINELj0%The number of users that were deleted"integerr
-usernamestring0’REQUEST_POLICY:ALL_NODES’RESPONSE_POLICY:ALL_SUCCEEDED

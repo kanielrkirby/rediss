@@ -1,4 +1,0 @@
-
-GENPASSQGenerates a pseudorandom, secure password that can be used to identify ACL users.O(1)"ACL2server:6.0.0@þÿÿÿÿÿÿÿÿJ
-aclCommandRNOSCRIPTRLOADINGRSTALERSENTINELjÝÒPseudorandom data. By default it contains 64 bytes, representing 256 bits of data. If `bits` was given, the output string length is the number of specified bits (rounded to the next multiple of 4) divided by 4."stringr
-bitsinteger(
