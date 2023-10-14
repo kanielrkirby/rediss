@@ -1,0 +1,10 @@
+
+DRYRUNNSimulates the execution of a command by a user, without executing the command.O(1)."ACL2server:7.0.0@üÿÿÿÿÿÿÿÿJ
+aclCommandRADMINRNOSCRIPTRLOADINGRSTALERSENTINELj§
+@
+:The given user may successfully execute the given command.2OK
+c
+YThe description of the problem, in case the user is not allowed to run the given command.stringr
+usernamestringr
+commandstringr
+argstring(0

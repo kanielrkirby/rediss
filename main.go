@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+  HandleJSONToProto()
 	fmt.Println("Listening on port :6379")
 
 	// Create a new server

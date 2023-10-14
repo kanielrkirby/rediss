@@ -15,7 +15,7 @@ type Aof struct {
 }
 
 func NewAof(path string) (*Aof, error) {
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0666)
+  f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func NewAof(path string) (*Aof, error) {
 		rd:   bufio.NewReader(f),
 	}
 
-	// start go routine to sync aof to disk every 1 second
+	// Sync every second
 	go func() {
 		for {
 			aof.mu.Lock()

@@ -1,0 +1,8 @@
+
+CAT<Lists the ACL categories, or the commands inside a category.7O(1) since the categories and commands are a fixed set."ACL2server:6.0.0@þÿÿÿÿÿÿÿÿJ
+aclCommandRNOSCRIPTRLOADINGRSTALERSENTINELjÅ
+V
+CIn case `category` was not given, a list of existing ACL categoriesarray*string
+k
+XIn case `category` was given, list of commands that fall under the provided ACL categoryarray*stringr
+categorystring(

@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package command;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/piratey7007/rediss/main";
+
+message Command {
+  message KeySpec {
+    message BeginSearch {
+      message Index {
+        int32 pos = 1;
+      }
+
+      Index index = 1;
+    }
+
+    message FindKeys {
+      message Range {
+        int32 lastkey = 1;
+        int32 step = 2;
+        int32 limit = 3;
+      }
+
+      Range range = 1;
+    }
+
+    repeated string flags = 1;
+    BeginSearch begin_search = 2;
+    FindKeys find_keys = 3;
+  }
+
+  message ReplySchema {
+    message Item {
+      string description = 1;
+      string type = 2;
+      int32 maxItems = 3;
+      int32 minItems = 4;
+      repeated Item items = 5;
+      string const = 6;
+      bool additionalProperties = 7;
+      Properties properties = 8;
+    }
+
+    repeated Item anyOf = 1;
+    repeated Item oneOf = 2;
+
+    string description = 3;
+    string type = 4;
+    int32 maxItems = 5;
+    int32 minItems = 6;
+    string const = 7;
+    bool additionalProperties = 8;
+    Properties properties = 9;
+    repeated Item items = 10;
+  }
+
+  message Argument {
+    string name = 1;
+    string type = 2;
+    int32 key_spec_index = 3;
+    string token = 4;
+    bool optional = 5;
+    bool multiple = 6;
+    repeated Argument arguments = 7;
+  }
+
+  message Properties {
+    message PropertyValue {
+      oneof value {
+        string stringValue = 1;
+        Properties propertiesValue = 2;
+      }
+    }
+    map<string, PropertyValue> properties = 1;
+  }
+
+
+  message History {
+    repeated google.protobuf.ListValue history = 1;
+  }
+
+
+  string name = 1;
+  string summary = 2;
+  string complexity = 3;
+  string container = 4;    
+  string get_keys_function = 5;
+  string group = 6;
+  string since = 7;
+  int32 arity = 8;
+  string function = 9;
+  repeated string command_flags = 10;
+  repeated string acl_categories = 11;
+  repeated KeySpec key_specs = 12;
+  ReplySchema reply_schema = 13;
+  repeated Argument arguments = 14;
+  repeated google.protobuf.ListValue history = 15;
+  bool additionalProperties = 16;
+  Properties properties = 17;
+  repeated string command_tips = 18;
+}
+
+
