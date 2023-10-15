@@ -6,7 +6,7 @@ import (
 	"strings"
 
   "github.com/piratey7007/rediss/commands"
-  _ "github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/resp"
 )
 
 func main() {
@@ -30,13 +30,13 @@ func main() {
 		commandName := strings.ToUpper(value.Array[0].Bulk)
 		args := value.Array[1:]
 
-    cmd, err := commands.Registry.Commands[commandName]
-    if cmd.Kind() != reflect.Func {
+    cmd, exists := commands.Registry.Commands[commandName]
+    if !exists {
       fmt.Println("Invalid command: ", commandName)
       return
     }
 
-    cmd.Call([]reflect.Value{args})
+    cmd.Execute(args)
 	})
 
 	// Listen for connections
@@ -49,40 +49,40 @@ func main() {
 	defer conn.Close()
 
 	for {
-		resp := NewResp(conn)
-		value, err := resp.Read()
+		RESP := resp.NewResp(conn)
+		value, err := RESP.Read()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		if value.typ != "array" {
-			fmt.Println("Invalid request, expected array")
+		if value.Typ != "Array" {
+			fmt.Println("Invalid request, expected Array")
 			continue
 		}
 
-		if len(value.array) == 0 {
-			fmt.Println("Invalid request, expected array length > 0")
+		if len(value.Array) == 0 {
+			fmt.Println("Invalid request, expected Array length > 0")
 			continue
 		}
 
-		command := strings.ToUpper(value.array[0].bulk)
-		args := value.array[1:]
+		command := strings.ToUpper(value.Array[0].Bulk)
+		args := value.Array[1:]
 
-		writer := NewWriter(conn)
+		writer := resp.NewWriter(conn)
 
-		handler, ok := Handlers[command]
-		if !ok {
-			fmt.Println("Invalid command: ", command)
-			writer.Write(Value{typ: "string", str: ""})
-			continue
-		}
+    cmd, exists := commands.Registry.Commands[command]
+
+    if !exists {
+      fmt.Println("Invalid command: ", command)
+      continue
+    }
 
 		if command == "SET" || command == "HSET" {
 			aof.Write(value)
 		}
 
-		result := handler(args)
+		result := cmd.Execute(args)
 		writer.Write(result)
 	}
 }
