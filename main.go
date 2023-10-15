@@ -38,20 +38,28 @@ func main() {
     cmd.Execute(args)
 	})
 
-	// Listen for connections
-	conn, err := l.Accept()
-	if err != nil {
-		fmt.Println(err)
-		return
+	for {
+    conn, err := l.Accept()
+    if err != nil {
+      fmt.Println("Error accepting connection: " + err.Error())
+			continue
+    }
+
+    go handleConnection(conn, aof)
 	}
+}
 
-	defer conn.Close()
-
+func handleConnection(conn net.Conn, aof *Aof) {
+  defer conn.Close()
 	for {
 		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
-			fmt.Println(err)
+      if err.Error() == "EOF" {
+        fmt.Println("Connection closed")
+        return
+      }
+      fmt.Println(err.Error())
 			return
 		}
 
@@ -83,5 +91,6 @@ func main() {
 
 		result := cmd.Execute(args)
 		writer.Write(result)
+    fmt.Println("result: ", result)
 	}
 }

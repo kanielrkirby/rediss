@@ -22,7 +22,7 @@ func command(args []resp.Value) resp.Value {
     str += "complexity: " + metadata.Complexity + "\n"
 
 		return resp.Value{
-      Typ: "Bulk",
+      Typ: "bulk",
       Bulk: str,
 		}
 	}
@@ -34,7 +34,7 @@ func command(args []resp.Value) resp.Value {
   }
 
   return resp.Value{
-    Typ: "Bulk",
-    Bulk: builder.String(),
+    Typ: "string",
+    Str: builder.String(),
   }
 }

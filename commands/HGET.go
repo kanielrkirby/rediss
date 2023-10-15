@@ -24,6 +24,6 @@ func hget(args []resp.Value) resp.Value {
 		return resp.Value{Typ: "null"}
 	}
 
-	return resp.Value{Typ: "Bulk", Bulk: value}
+	return resp.Value{Typ: "bulk", Bulk: value}
 }
 

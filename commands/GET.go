@@ -1,11 +1,12 @@
 package commands
 
 import (
+  "fmt"
   "github.com/piratey7007/rediss/resp"
 )
 
 func init() {
-  Registry.Register("GET", get)
+  Registry.Register("get", get)
 }
 
 func get(args []resp.Value) resp.Value {
@@ -14,6 +15,7 @@ func get(args []resp.Value) resp.Value {
 	}
 
 	key := args[0].Bulk
+  fmt.Println("key: ", key)
 
 	SETsMu.RLock()
 	value, ok := SETs[key]

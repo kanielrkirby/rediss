@@ -78,15 +78,13 @@ func (r *Resp) Read() (Value, error) {
 
 func (r *Resp) readArray() (Value, error) {
 	v := Value{}
-	v.Typ = "Array"
+	v.Typ = "array"
 
-	// read length of Array
 	len, _, err := r.readInteger()
 	if err != nil {
 		return v, err
 	}
 
-	// foreach line, parse and read the value
 	v.Array = make([]Value, 0)
 	for i := 0; i < len; i++ {
 		val, err := r.Read()
@@ -94,7 +92,6 @@ func (r *Resp) readArray() (Value, error) {
 			return v, err
 		}
 
-		// append parsed value to Array
 		v.Array = append(v.Array, val)
 	}
 
@@ -104,7 +101,7 @@ func (r *Resp) readArray() (Value, error) {
 func (r *Resp) readBulk() (Value, error) {
 	v := Value{}
 
-	v.Typ = "Bulk"
+	v.Typ = "bulk"
 
 	len, _, err := r.readInteger()
 	if err != nil {
@@ -113,21 +110,26 @@ func (r *Resp) readBulk() (Value, error) {
 
 	Bulk := make([]byte, len)
 
-	r.reader.Read(Bulk)
+  _, err = r.reader.Read(Bulk)
+  if err != nil {
+    return v, err
+  }
 
 	v.Bulk = string(Bulk)
 
-	// Read the trailing CRLF
-	r.readLine()
+  _, _, err = r.readLine()
+  if err != nil {
+    return v, err
+  }
 
 	return v, nil
 }
 
 func (v Value) Marshal() []byte {
 	switch v.Typ {
-	case "Array":
+	case "array":
 		return v.marshalArray()
-	case "Bulk":
+	case "bulk":
 		return v.marshalBulk()
 	case "string":
 		return v.marshalString()
