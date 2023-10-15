@@ -5,12 +5,12 @@ import (
 )
 
 func init() {
-  Registry.Register("HGET", HGET)
+  Registry.Register("hget", hget)
 }
 
-func HGET(args []resp.Value) resp.Value {
+func hget(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'HGET' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hget' command"}
 	}
 
 	hash := args[0].Bulk

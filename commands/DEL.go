@@ -5,10 +5,10 @@ import (
 )
 
 func init() {
-  Registry.Register("DEL", DEL)
+  Registry.Register("del", del)
 }
 
-func DEL(args []resp.Value) resp.Value {
+func del(args []resp.Value) resp.Value {
   if len(args) != 1 {
     return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'del' command"}
   }

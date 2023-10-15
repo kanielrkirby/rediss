@@ -5,10 +5,10 @@ import (
 )
 
 func init() {
-  Registry.Register("GET", GET)
+  Registry.Register("GET", get)
 }
 
-func GET(args []resp.Value) resp.Value {
+func get(args []resp.Value) resp.Value {
 	if len(args) != 1 {
 		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'get' command"}
 	}

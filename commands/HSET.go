@@ -5,12 +5,12 @@ import (
 )
 
 func init() {
-  Registry.Register("HSET", HSET)
+  Registry.Register("hset", hset)
 }
 
-func HSET(args []resp.Value) resp.Value {
+func hset(args []resp.Value) resp.Value {
 	if len(args) != 3 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'HSET' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hset' command"}
 	}
 
 	hash := args[0].Bulk

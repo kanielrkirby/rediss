@@ -5,14 +5,13 @@ import (
 	"net"
 	"strings"
 
-  "github.com/piratey7007/rediss/commands"
-  "github.com/piratey7007/rediss/resp"
+	"github.com/piratey7007/rediss/commands"
+	"github.com/piratey7007/rediss/resp"
 )
 
 func main() {
 	fmt.Println("Listening on port :6379")
 
-	// Create a new server
 	l, err := net.Listen("tcp", ":6379")
 	if err != nil {
 		fmt.Println(err)
@@ -27,7 +26,7 @@ func main() {
 	defer aof.Close()
 
 	aof.Read(func(value Value) {
-		commandName := strings.ToUpper(value.Array[0].Bulk)
+		commandName := value.Array[0].Bulk
 		args := value.Array[1:]
 
     cmd, exists := commands.Registry.Commands[commandName]
@@ -66,7 +65,7 @@ func main() {
 			continue
 		}
 
-		command := strings.ToUpper(value.Array[0].Bulk)
+		command := strings.ToLower(value.Array[0].Bulk)
 		args := value.Array[1:]
 
 		writer := resp.NewWriter(conn)
@@ -78,7 +77,7 @@ func main() {
       continue
     }
 
-		if command == "SET" || command == "HSET" {
+		if command == "set" || command == "hset" {
 			aof.Write(value)
 		}
 

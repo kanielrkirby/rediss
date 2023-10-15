@@ -1,10 +1,12 @@
 package commands
 
 import (
-	"fmt"
   "os"
   "encoding/json"
   "github.com/piratey7007/rediss/resp"
+  "log"
+  "fmt"
+  "path/filepath"
 )
 
 type CommandMetadata struct {
@@ -28,9 +30,10 @@ var Registry = &registry{
 }
 
 func (r *registry) Register(name string, cmd func (args []resp.Value) resp.Value) error {
-  metadata, err := ReadJSON(name)
+  path := filepath.Join("commands", "json", fmt.Sprintf("%s.json", name))
+  metadata, err := ReadJSON(path)
   if err != nil {
-    return err
+    log.Fatal(err)
   }
 
   r.Commands[name] = Command{
@@ -41,8 +44,7 @@ func (r *registry) Register(name string, cmd func (args []resp.Value) resp.Value
   return nil
 }
 
-func ReadJSON(name string) (CommandMetadata, error) {
-  path := fmt.Sprintf("./json/%s.json", name)
+func ReadJSON(path string) (CommandMetadata, error) {
   file, err := os.Open(path)
   if err != nil {
     return CommandMetadata{}, err
@@ -57,3 +59,4 @@ func ReadJSON(name string) (CommandMetadata, error) {
 
   return metadata, nil
 }
+

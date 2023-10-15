@@ -5,12 +5,12 @@ import (
 )
 
 func init() {
-  Registry.Register("SET", SET)
+  Registry.Register("set", set)
 }
 
-func SET(args []resp.Value) resp.Value {
+func set(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'SET' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'set' command"}
 	}
 
 	key := args[0].Bulk
