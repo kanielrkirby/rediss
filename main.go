@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"net"
 	"strings"
-  "reflect"
 
   "github.com/piratey7007/rediss/commands"
-  "github.com/piratey7007/rediss/resp"
+  _ "github.com/piratey7007/rediss/resp"
 )
 
 func main() {
@@ -31,7 +30,7 @@ func main() {
 		commandName := strings.ToUpper(value.Array[0].Bulk)
 		args := value.Array[1:]
 
-    cmd := reflect.ValueOf(commands).MethodByName(commandName)
+    cmd, err := commands.Registry.Commands[commandName]
     if cmd.Kind() != reflect.Func {
       fmt.Println("Invalid command: ", commandName)
       return

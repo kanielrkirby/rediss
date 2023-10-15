@@ -4,9 +4,13 @@ import (
   "github.com/piratey7007/rediss/resp"
 )
 
-func hset(args []resp.Value) resp.Value {
+func init() {
+  Registry.Register("HSET", HSET)
+}
+
+func HSET(args []resp.Value) resp.Value {
 	if len(args) != 3 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hset' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'HSET' command"}
 	}
 
 	hash := args[0].Bulk

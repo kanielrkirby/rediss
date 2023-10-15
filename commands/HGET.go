@@ -4,9 +4,13 @@ import (
   "github.com/piratey7007/rediss/resp"
 )
 
-func hget(args []resp.Value) resp.Value {
+func init() {
+  Registry.Register("HGET", HGET)
+}
+
+func HGET(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hget' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'HGET' command"}
 	}
 
 	hash := args[0].Bulk

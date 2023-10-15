@@ -2,6 +2,9 @@ package commands
 
 import (
 	"fmt"
+  "os"
+  "encoding/json"
+  "github.com/piratey7007/rediss/resp"
 )
 
 type CommandMetadata struct {
@@ -10,27 +13,47 @@ type CommandMetadata struct {
 	Complexity string
 }
 
-type Command interface {
-	Execute(args []string) (string, error)
+type Command struct {
+  Execute func(args []resp.Value) resp.Value
+  CommandMetadata
 }
 
-type Registry struct {
-  commands map[string]struct {
-    Execute func(args []string) (string, error)
-    CommandMetadata
-  }
+
+type registry struct {
+  Commands map[string]Command
 }
 
-func (r *Registry) Register(name string, cmd Command, metadata CommandMetadata) error {
-  if _, exists := r.commands[name]; exists {
-    return fmt.Errorf("Command %s already registered", name)
+var Registry = &registry{
+  Commands: make(map[string]Command),
+}
+
+func (r *registry) Register(name string, cmd func (args []resp.Value) resp.Value) error {
+  metadata, err := ReadJSON(name)
+  if err != nil {
+    return err
   }
-  r.commands[name] = struct {
-    Execute func(args []string) (string, error)
-    CommandMetadata
-  }{
-    Execute: cmd.Execute,
+
+  r.Commands[name] = Command{
+    Execute: cmd,
     CommandMetadata: metadata,
   }
+
   return nil
+}
+
+func ReadJSON(name string) (CommandMetadata, error) {
+  path := fmt.Sprintf("./json/%s.json", name)
+  file, err := os.Open(path)
+  if err != nil {
+    return CommandMetadata{}, err
+  }
+  defer file.Close()
+
+  var metadata CommandMetadata
+  err = json.NewDecoder(file).Decode(&metadata)
+  if err != nil {
+    return CommandMetadata{}, err
+  }
+
+  return metadata, nil
 }

@@ -4,9 +4,13 @@ import (
   "github.com/piratey7007/rediss/resp"
 )
 
-func hgetall(args []resp.Value) resp.Value {
+func init() {
+  Registry.Register("HGETALL", HGETALL)
+}
+
+func HGETALL(args []resp.Value) resp.Value {
 	if len(args) != 1 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hgetall' command"}
+		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'HGETALL' command"}
 	}
 
 	hash := args[0].Bulk

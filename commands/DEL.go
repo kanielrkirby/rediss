@@ -4,6 +4,10 @@ import (
   "github.com/piratey7007/rediss/resp"
 )
 
+func init() {
+  Registry.Register("DEL", DEL)
+}
+
 func DEL(args []resp.Value) resp.Value {
   if len(args) != 1 {
     return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'del' command"}
@@ -17,3 +21,5 @@ func DEL(args []resp.Value) resp.Value {
 
   return resp.Value{Typ: "string", Str: "OK"}
 }
+
+

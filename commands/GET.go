@@ -4,6 +4,10 @@ import (
   "github.com/piratey7007/rediss/resp"
 )
 
+func init() {
+  Registry.Register("GET", GET)
+}
+
 func GET(args []resp.Value) resp.Value {
 	if len(args) != 1 {
 		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'get' command"}
