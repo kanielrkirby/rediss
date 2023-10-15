@@ -63,13 +63,13 @@ func handleConnection(conn net.Conn, aof *Aof) {
 			return
 		}
 
-		if value.Typ != "Array" {
-			fmt.Println("Invalid request, expected Array")
+		if value.Typ != "array" {
+			fmt.Println("Invalid request, expected array")
 			continue
 		}
 
 		if len(value.Array) == 0 {
-			fmt.Println("Invalid request, expected Array length > 0")
+			fmt.Println("Invalid request, expected array length > 0")
 			continue
 		}
 
@@ -91,6 +91,5 @@ func handleConnection(conn net.Conn, aof *Aof) {
 
 		result := cmd.Execute(args)
 		writer.Write(result)
-    fmt.Println("result: ", result)
 	}
 }
