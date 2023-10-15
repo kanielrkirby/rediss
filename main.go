@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net"
 	"strings"
-  commands "github.com/piratey7007/rediss/commands"
+  "reflect"
+
+  "github.com/piratey7007/rediss/commands"
   "github.com/piratey7007/rediss/resp"
 )
 
@@ -26,16 +28,16 @@ func main() {
 	defer aof.Close()
 
 	aof.Read(func(value Value) {
-		command := strings.ToUpper(value.array[0].bulk)
-		args := value.array[1:]
+		commandName := strings.ToUpper(value.Array[0].Bulk)
+		args := value.Array[1:]
 
-		handler, ok := commands[command]
-		if !ok {
-			fmt.Println("Invalid command: ", command)
-			return
-		}
+    cmd := reflect.ValueOf(commands).MethodByName(commandName)
+    if cmd.Kind() != reflect.Func {
+      fmt.Println("Invalid command: ", commandName)
+      return
+    }
 
-		handler(args)
+    cmd.Call([]reflect.Value{args})
 	})
 
 	// Listen for connections
