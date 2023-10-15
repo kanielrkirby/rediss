@@ -7,6 +7,7 @@ import (
   "log"
   "fmt"
   "path/filepath"
+  "strings"
 )
 
 type CommandMetadata struct {
@@ -30,7 +31,8 @@ var Registry = &registry{
 }
 
 func (r *registry) Register(name string, cmd func (args []resp.Value) resp.Value) error {
-  path := filepath.Join("commands", "json", fmt.Sprintf("%s.json", name))
+  kebabName := strings.ReplaceAll(name, " ", "-")
+  path := filepath.Join("commands", "json", fmt.Sprintf("%s.json", kebabName))
   metadata, err := ReadJSON(path)
   if err != nil {
     log.Fatal(err)

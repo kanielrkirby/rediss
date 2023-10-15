@@ -4,54 +4,43 @@ import (
 	"fmt"
 	"github.com/piratey7007/rediss/resp"
 	"strings"
+	"github.com/piratey7007/rediss/errorHandler"
 )
 
 func init() {
 	Registry.Register("command", command)
+  Registry.Register("command count", count)
+  Registry.Register("command list", list)
+  Registry.Register("command info", info)
+  Registry.Register("command docs", docs)
+  Registry.Register("command getkeys", getKeys)
+  Registry.Register("command getkeysandflags", getKeysAndFlags)
+  Registry.Register("command help", help)
 }
 
 func command(args []resp.Value) resp.Value {
-	if len(args) == 0 {
-		var builder strings.Builder
+	if len(args) != 0 {
+  }
+  var builder strings.Builder
 
-		for _, cmd := range Registry.Commands {
-			builder.WriteString(cmd.Name + "\n")
-		}
+  for _, cmd := range Registry.Commands {
+    builder.WriteString(cmd.Name + "\n")
+  }
 
-		return resp.Value{
-			Typ: "string",
-			Str: builder.String(),
-		}
-	}
-	subcommand := strings.ToLower(args[0].Bulk)
-  switch subcommand {
-  case "count":
-    return commandCount(args[1:])
-  case "list":
-    return commandList(args[1:])
-  case "info":
-    return commandInfo(args[1:])
-  case "docs":
-    return commandDocs(args[1:])
-  case "getkeys":
-    return commandGetKeys(args[1:])
-  case "getkeysandflags":
-    return commandGetKeysAndFlags(args[1:])
-  case "help":
-    return commandHelp(args[1:])
-  default:
-    return resp.Value{Typ: "error", Str: fmt.Sprintf("ERR unknown subcommand '%s'. Try COMMAND HELP.", subcommand)}
+  return resp.Value{
+    Typ: "string",
+    Str: builder.String(),
   }
 }
 
-func commandCount(args []resp.Value) resp.Value {
+func count(args []resp.Value) resp.Value {
 	return resp.Value{
-		Typ: "integer",
+		Typ: "number",
 		Num: len(Registry.Commands),
 	}
 }
 
-func commandList(args []resp.Value) resp.Value {
+func list(args []resp.Value) resp.Value {
 	var builder strings.Builder
 
 	for _, cmd := range Registry.Commands {
@@ -64,19 +53,35 @@ func commandList(args []resp.Value) resp.Value {
 	}
 }
 
-func commandInfo(args []resp.Value) resp.Value {
+func info(args []resp.Value) resp.Value {
+  return resp.Value{
+    Typ: "error",
+    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+  }
 }
 
-func commandDocs(args []resp.Value) resp.Value {
+func docs(args []resp.Value) resp.Value {
+  return resp.Value{
+    Typ: "error",
+    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+  }
 }
 
-func commandGetKeys(args []resp.Value) resp.Value {
+func getKeys(args []resp.Value) resp.Value {
+  return resp.Value{
+    Typ: "error",
+    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+  }
 }
 
-func commandGetKeysAndFlags(args []resp.Value) resp.Value {
+func getKeysAndFlags(args []resp.Value) resp.Value {
+  return resp.Value{
+    Typ: "error",
+    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+  }
 }
 
-func commandHelp(args []resp.Value) resp.Value {
+func help(args []resp.Value) resp.Value {
 	var help = []string{
 		"COMMAND <subcommand> [<arg> [value] [opt] ...]. Subcommands are:",
 		"(no subcommand)",

@@ -73,7 +73,9 @@ func handleConnection(conn net.Conn, aof *Aof) {
 			continue
 		}
 
-		command := strings.ToLower(value.Array[0].Bulk)
+    command := strings.ToLower(value.Array[0].Bulk)
+    fmt.Println("Command: ", command)
+		
 		args := value.Array[1:]
 
 		writer := resp.NewWriter(conn)
