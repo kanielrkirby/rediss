@@ -11,7 +11,7 @@ func init() {
 
 func set(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("set")}
+		return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("set")}
 	}
 
 	key := args[0].Bulk

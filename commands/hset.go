@@ -11,7 +11,7 @@ func init() {
 
 func hset(args []resp.Value) resp.Value {
 	if len(args) != 3 {
-		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("hset")}
+		return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("hset")}
 	}
 
 	hash := args[0].Bulk

@@ -12,7 +12,7 @@ func init() {
 
 func get(args []resp.Value) resp.Value {
 	if len(args) != 1 {
-		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("get")}
+		return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("get")}
 	}
 
 	key := args[0].Bulk

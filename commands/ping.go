@@ -14,5 +14,5 @@ func ping(args []resp.Value) resp.Value {
 		return resp.Value{Typ: "string", Str: "PONG"}
 	}
 
-  return resp.Value{Typ: "error", Str: rerror.ArgumentCount("ping")}
+  return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("ping")}
 }

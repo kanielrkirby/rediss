@@ -78,4 +78,9 @@ func (e *RedisError) Format(args ...interface{}) *RedisError {
   return e
 }
 
+// FormatAndError is shorthand syntax for .Format(...args).Error()
+func (e *RedisError) FormatAndError(args ...interface{}) string {
+  return e.Format(args...).Error()
+}
+
 // Usage: to create a new error, use rerror.New(rerror.ErrUnimplemented, "some", "args")

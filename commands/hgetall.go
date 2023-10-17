@@ -11,7 +11,7 @@ func init() {
 
 func hgetall(args []resp.Value) resp.Value {
 	if len(args) != 1 {
-		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("hgetall")}
+		return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("hgetall")}
 	}
 
 	hash := args[0].Bulk

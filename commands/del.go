@@ -11,7 +11,7 @@ func init() {
 
 func del(args []resp.Value) resp.Value {
   if len(args) != 1 {
-    return resp.Value{Typ: "error", Str: rerror.ArgumentCount("del")}
+    return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("del")}
   }
 
   key := args[0].Bulk

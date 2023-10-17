@@ -11,7 +11,7 @@ func init() {
 
 func getset(args []resp.Value) resp.Value {
   if len(args) != 2 {
-    return resp.Value{Typ: "error", Str: rerror.ArgumentCount("getset")}
+    return resp.Value{Typ: "error", Str: rerror.ErrWrongNumberOfArguments.FormatAndError("getset")}
   }
 
   key := args[0].Bulk

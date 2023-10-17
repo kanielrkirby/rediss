@@ -56,28 +56,28 @@ func list(args []resp.Value) resp.Value {
 func info(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.ErrUnimplemented.Error(),
   }
 }
 
 func docs(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.ErrUnimplemented.Error(),
   }
 }
 
 func getKeys(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.ErrUnimplemented.Error(),
   }
 }
 
 func getKeysAndFlags(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.ErrUnimplemented.Error(),
   }
 }
 
