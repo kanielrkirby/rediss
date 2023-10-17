@@ -55,18 +55,25 @@ var (
 	ErrUnknownSubcommand  = defineError("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
   // ErrWrongNumberOfArguments is used to indicate that the wrong number of arguments were provided. Provide "Subcommand" and "Command" to format the message.
   ErrWrongNumberOfArguments = defineError("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try %s HELP.")
+  // ErrUnknownType is used to indicate that the type of the value is unknown. Provide "Type" to format the message.
+  ErrUnknownType = defineError("UNKNOWN_TYPE", "Unknown type '%v'.")
+  // ErrWrap is used when no other error code is appropriate. Provide the error and a custom "Message" to format the message.
+  ErrWrap = func(err error) *RedisError {
+    return defineError("WRAP", "%s:" + err.Error())
+  }
 )
 
-// isDebug is used to determine whether to show the function and line number of the error.
-var isDebug bool = true
+// DEBUG is used to determine whether to show the function and line number of the error.
+var DEBUG bool = true
 
 // Error formats the error message using fmt.Sprintf and returns it.
 func (e *RedisError) Error() string {
-  if !isDebug {
+  if !DEBUG {
     return e.Message
   }
-  funcName, _, line, _ := runtime.Caller(3)
-  return fmt.Sprintf("%s:%d: %s", runtime.FuncForPC(funcName).Name(), line, e.Message)
+  pc, file, line, _ := runtime.Caller(1)
+  fn := runtime.FuncForPC(pc).Name()
+  return fmt.Sprintf("%s:%d in %s: %s", file, line, fn, e.Message)
 }
 
 // Format formats the error message using fmt.Sprintf and returns it.

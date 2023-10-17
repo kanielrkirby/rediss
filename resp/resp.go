@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+  "errors"
+  "github.com/piratey7007/rediss/rerror"
 )
 
 const (
@@ -35,7 +37,7 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 	for {
 		b, err := r.reader.ReadByte()
 		if err != nil {
-			return nil, 0, err
+			return nil, 0, rerror.ErrWrap(err).Format("Error reading byte")
 		}
 		n += 1
 		line = append(line, b)
@@ -49,11 +51,11 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 func (r *Resp) readInteger() (x int, n int, err error) {
 	line, n, err := r.readLine()
 	if err != nil {
-		return 0, 0, err
+		return 0, 0, rerror.ErrWrap(err).Format("Error reading line")
 	}
 	i64, err := strconv.ParseInt(string(line), 10, 64)
 	if err != nil {
-		return 0, n, err
+		return 0, n, rerror.ErrWrap(err).Format("Error parsing integer")
 	}
 	return int(i64), n, nil
 }
@@ -62,7 +64,7 @@ func (r *Resp) Read() (Value, error) {
 	_type, err := r.reader.ReadByte()
 
 	if err != nil {
-		return Value{}, err
+		return Value{}, rerror.ErrWrap(err).Format("Error reading type")
 	}
 
 	switch _type {
@@ -71,7 +73,7 @@ func (r *Resp) Read() (Value, error) {
 	case BULK:
 		return r.readBulk()
 	default:
-		fmt.Printf("Unknown type: %v", string(_type))
+    fmt.Printf(rerror.ErrUnknownType.FormatAndError(string(_type)))
 		return Value{}, nil
 	}
 }
@@ -82,14 +84,14 @@ func (r *Resp) readArray() (Value, error) {
 
 	len, _, err := r.readInteger()
 	if err != nil {
-		return v, err
+		return v, rerror.ErrWrap(err).Format("Error reading array length")
 	}
 
 	v.Array = make([]Value, 0)
 	for i := 0; i < len; i++ {
 		val, err := r.Read()
 		if err != nil {
-			return v, err
+			return v, rerror.ErrWrap(err).Format("Error reading array value")
 		}
 
 		v.Array = append(v.Array, val)
@@ -105,21 +107,21 @@ func (r *Resp) readBulk() (Value, error) {
 
 	len, _, err := r.readInteger()
 	if err != nil {
-		return v, err
+		return v, rerror.ErrWrap(err).Format("Error reading bulk length")
 	}
 
 	Bulk := make([]byte, len)
 
   _, err = r.reader.Read(Bulk)
   if err != nil {
-    return v, err
+    return v, rerror.ErrWrap(err).Format("Error reading bulk")
   }
 
 	v.Bulk = string(Bulk)
 
   _, _, err = r.readLine()
   if err != nil {
-    return v, err
+    return v, rerror.ErrWrap(err).Format("Error reading line")
   }
 
 	return v, nil
@@ -177,6 +179,10 @@ func (v Value) marshalArray() []byte {
 }
 
 func (v Value) marshallError() []byte {
+  if rerror.DEBUG {
+    fmt.Print(rerror.ErrWrap(errors.New(v.Str)).FormatAndError(v.Str))
+  }
+
 	var bytes []byte
 	bytes = append(bytes, ERROR)
 	bytes = append(bytes, v.Str...)
@@ -202,7 +208,7 @@ func (w *Writer) Write(v Value) error {
 
 	_, err := w.writer.Write(bytes)
 	if err != nil {
-		return err
+		return rerror.ErrWrap(err).Format("Error writing value")
 	}
 
 	return nil
