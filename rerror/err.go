@@ -9,23 +9,11 @@ import (
 type RedisError struct {
 	Code    string
 	Message string
-	Args    []interface{}
-}
-
-// redisErrorExpectingArgs represents a custom error code and message.
-type redisErrorExpectingArgs struct {
-	Code    string
-	Message string
 }
 
 // defineError returns a standard RedisError with the given code and message.
 func defineError(code string, message string) *RedisError {
   return &RedisError{Code: code, Message: message}
-}
-
-// defineErrorWithArgs returns a redisErrorExpectingArgs with the given code and message, which can be used with New() to create a RedisError with args to format the message using fmt.Sprintf.
-func defineErrorWithArgs(code string, message string) *redisErrorExpectingArgs {
-  return &redisErrorExpectingArgs{Code: code, Message: message}
 }
 
 var (
@@ -64,9 +52,9 @@ var (
   // ErrUnauthenticated is used to indicate that the request does not have valid authentication credentials for the operation.
 	ErrUnauthenticated     = defineError("UNAUTHENTICATED", "Unauthenticated")
   // ErrUnknownSubcommand is used to indicate that the subcommand is not known. Provide "Subcommand" and "Command" to format the message.
-	ErrUnknownSubcommand  = defineErrorWithArgs("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
+	ErrUnknownSubcommand  = defineError("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
   // ErrWrongNumberOfArguments is used to indicate that the wrong number of arguments were provided. Provide "Subcommand" and "Command" to format the message.
-  ErrWrongNumberOfArguments = defineErrorWithArgs("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try %s HELP.")
+  ErrWrongNumberOfArguments = defineError("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try %s HELP.")
 )
 
 // isDebug is used to determine whether to show the function and line number of the error.
@@ -75,19 +63,19 @@ var isDebug bool = true
 // Error formats the error message using fmt.Sprintf and returns it.
 func (e *RedisError) Error() string {
   if !isDebug {
-    return fmt.Sprintf(e.Message, e.Args...)
+    return e.Message
   }
-  funcName, file, line, _ := runtime.Caller(3)
-  return fmt.Sprintf("%s:%d %s: %s", file, line, runtime.FuncForPC(funcName).Name(), fmt.Sprintf(e.Message, e.Args...))
+  funcName, _, line, _ := runtime.Caller(3)
+  return fmt.Sprintf("%s:%d: %s", runtime.FuncForPC(funcName).Name(), line, e.Message)
 }
 
-// New creates a new RedisError from a redisErrorExpectingArgs and args meant to format the message using fmt.Sprintf.
-func New(Code *redisErrorExpectingArgs, args ...interface{}) error {
-  if args == nil {
-    args = make([]interface{}, 0)
+// Format formats the error message using fmt.Sprintf and returns it.
+func (e *RedisError) Format(args ...interface{}) *RedisError {
+  if (args == nil || len(args) == 0) {
+    return e
   }
-	return &RedisError{Code: Code.Code, Message: Code.Message, Args: args}
+  e.Message = fmt.Sprintf(e.Message, args...)
+  return e
 }
-
 
 // Usage: to create a new error, use rerror.New(rerror.ErrUnimplemented, "some", "args")
