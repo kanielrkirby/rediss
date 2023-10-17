@@ -88,7 +88,7 @@ func handleConnection(conn net.Conn, aof *Aof) {
     tempVal := ""
     i := 0
     for _, v := range value.Array {
-      tempVal = " " + str + v.Bulk
+      tempVal = str + " " + v.Bulk
       if _, exists := commands.Registry.Commands[strings.ToLower(strings.TrimSpace(tempVal))]; !exists {
         break
       }
@@ -97,9 +97,8 @@ func handleConnection(conn net.Conn, aof *Aof) {
     }
 
     command := strings.ToLower(strings.TrimSpace(str))
-    fmt.Println("Command: ", command)
 
-    args := value.Array[i + 1:]
+    args := value.Array[i:]
 
 		writer := resp.NewWriter(conn)
 
