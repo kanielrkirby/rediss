@@ -19,6 +19,7 @@ func init() {
 }
 
 func command(args []resp.Value) resp.Value {
+  fmt.Println("args: ", args)
 	if len(args) != 0 {
   }
   var builder strings.Builder
@@ -41,6 +42,7 @@ func count(args []resp.Value) resp.Value {
 }
 
 func list(args []resp.Value) resp.Value {
+  fmt.Println("hey")
 	var builder strings.Builder
 
 	for _, cmd := range Registry.Commands {
@@ -54,16 +56,37 @@ func list(args []resp.Value) resp.Value {
 }
 
 func info(args []resp.Value) resp.Value {
+  arr := make([]resp.Value, len(Registry.Commands))
+  for _, cmd := range Registry.Commands {
+    arr = append(arr, resp.Value{
+      Typ: "string",
+      Str: cmd.Name,
+    })
+  }
+
   return resp.Value{
-    Typ: "error",
-    Str: rerror.ErrUnimplemented.Error(),
+    Typ: "array",
+    Array: arr,
   }
 }
 
+// docs returns the documentation for the given command.
 func docs(args []resp.Value) resp.Value {
+  fmt.Println("argsssssss: ", args)
+  for _, arg := range args {
+    fmt.Println("arg: ", arg)
+  }
+  cmd, exists := Registry.Commands[args[0].Str]
+  if !exists {
+    return resp.Value{
+      Typ: "error",
+      Str: rerror.ErrInvalidArgument.Error(),
+    }
+  }
+  //use metadata as docs
   return resp.Value{
-    Typ: "error",
-    Str: rerror.ErrUnimplemented.Error(),
+    Typ: "string",
+    Str: fmt.Sprintf("Name: %s\nComplexity: %s\nSummary: %s", cmd.CommandMetadata.Name, cmd.CommandMetadata.Complexity, cmd.CommandMetadata.Summary),
   }
 }
 

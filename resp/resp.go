@@ -2,11 +2,11 @@ package resp
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"github.com/piratey7007/rediss/rerror"
 	"io"
 	"strconv"
-  "errors"
-  "github.com/piratey7007/rediss/rerror"
 )
 
 const (
@@ -33,6 +33,7 @@ func NewResp(rd io.Reader) *Resp {
 	return &Resp{reader: bufio.NewReader(rd)}
 }
 
+// readLine reads a line from the reader until it reaches \r\n.
 func (r *Resp) readLine() (line []byte, n int, err error) {
 	for {
 		b, err := r.reader.ReadByte()
@@ -45,11 +46,16 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 			break
 		}
 	}
+  fmt.Println("line: ", line[:len(line)-2])
 	return line[:len(line)-2], n, nil
 }
 
+// readInteger reads the line and parses the result as an integer.
 func (r *Resp) readInteger() (x int, n int, err error) {
 	line, n, err := r.readLine()
+  for i := 0; i < len(line); i++ {
+    fmt.Print(line[i])
+  }
 	if err != nil {
 		return 0, 0, rerror.ErrWrap(err).Format("Error reading line")
 	}
@@ -60,6 +66,8 @@ func (r *Resp) readInteger() (x int, n int, err error) {
 	return int(i64), n, nil
 }
 
+// Read reads a RESP value from the reader. This is the primary entry point for
+// reading RESP values.
 func (r *Resp) Read() (Value, error) {
 	_type, err := r.reader.ReadByte()
 
@@ -78,6 +86,8 @@ func (r *Resp) Read() (Value, error) {
 	}
 }
 
+// readArray reads an array from the reader, and reads each of the values in
+// the array.
 func (r *Resp) readArray() (Value, error) {
 	v := Value{}
 	v.Typ = "array"
@@ -100,6 +110,8 @@ func (r *Resp) readArray() (Value, error) {
 	return v, nil
 }
 
+// readBulk reads a bulk string from the reader.
+// Formatting: $<length>\r\n<bytes>\r\n
 func (r *Resp) readBulk() (Value, error) {
 	v := Value{}
 
@@ -112,22 +124,24 @@ func (r *Resp) readBulk() (Value, error) {
 
 	Bulk := make([]byte, len)
 
-  _, err = r.reader.Read(Bulk)
-  if err != nil {
-    return v, rerror.ErrWrap(err).Format("Error reading bulk")
-  }
+	_, err = r.reader.Read(Bulk)
+	if err != nil {
+		return v, rerror.ErrWrap(err).Format("Error reading bulk")
+	}
 
 	v.Bulk = string(Bulk)
 
-  _, _, err = r.readLine()
-  if err != nil {
-    return v, rerror.ErrWrap(err).Format("Error reading line")
-  }
+	_, _, err = r.readLine()
+	if err != nil {
+		return v, rerror.ErrWrap(err).Format("Error reading line")
+	}
 
 	return v, nil
 }
 
+// Marshal returns the RESP encoding of the value.
 func (v Value) Marshal() []byte {
+  fmt.Println("Marshal: ", v)
 	switch v.Typ {
 	case "array":
 		return v.marshalArray()
@@ -144,6 +158,7 @@ func (v Value) Marshal() []byte {
 	}
 }
 
+// marshalString returns the RESP encoding of a string.
 func (v Value) marshalString() []byte {
 	var bytes []byte
 	bytes = append(bytes, STRING)
@@ -153,6 +168,7 @@ func (v Value) marshalString() []byte {
 	return bytes
 }
 
+// marshalBulk returns the RESP encoding of a bulk string.
 func (v Value) marshalBulk() []byte {
 	var bytes []byte
 	bytes = append(bytes, BULK)
@@ -164,6 +180,7 @@ func (v Value) marshalBulk() []byte {
 	return bytes
 }
 
+// marshalArray returns the RESP encoding of an array.
 func (v Value) marshalArray() []byte {
 	len := len(v.Array)
 	var bytes []byte
@@ -178,10 +195,11 @@ func (v Value) marshalArray() []byte {
 	return bytes
 }
 
+// marshallError returns the RESP encoding of an error.
 func (v Value) marshallError() []byte {
-  if rerror.DEBUG {
-    fmt.Print(rerror.ErrWrap(errors.New(v.Str)).FormatAndError(v.Str))
-  }
+	if rerror.DEBUG {
+		fmt.Print(rerror.ErrWrap(errors.New(v.Str)).FormatAndError(v.Str))
+	}
 
 	var bytes []byte
 	bytes = append(bytes, ERROR)
@@ -191,6 +209,7 @@ func (v Value) marshallError() []byte {
 	return bytes
 }
 
+// marshallNull returns the RESP encoding of a null.
 func (v Value) marshallNull() []byte {
 	return []byte("$-1\r\n")
 }
@@ -199,11 +218,14 @@ type Writer struct {
 	writer io.Writer
 }
 
+// NewWriter returns a new RESP writer.
 func NewWriter(w io.Writer) *Writer {
 	return &Writer{writer: w}
 }
 
+// Write writes a RESP value to the writer.
 func (w *Writer) Write(v Value) error {
+  fmt.Println("Write: ", v)
 	var bytes = v.Marshal()
 
 	_, err := w.writer.Write(bytes)

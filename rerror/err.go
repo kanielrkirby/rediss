@@ -72,7 +72,7 @@ func (e *RedisError) Error() string {
     return e.Message
   }
   stackBuf := make([]byte, 1024)
-  runtime.Stack(stackBuf, false)
+  runtime.Stack(stackBuf, true)
   stack := string(stackBuf)
   return fmt.Sprintf("%s\n%s", stack, e.Message)
 }

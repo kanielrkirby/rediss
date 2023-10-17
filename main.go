@@ -8,6 +8,7 @@ import (
 
 	"github.com/piratey7007/rediss/commands"
 	"github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/rerror"
 )
 
 func main() {
@@ -22,8 +23,7 @@ func main() {
 
 	aof, err := NewAof("database.aof")
 	if err != nil {
-    _, fn, line, _ := runtime.Caller(1)
-		fmt.Println(fn, line, err)
+    fmt.Println(rerror.ErrWrap(err).FormatAndError("Error creating aof file"))
 		return
 	}
 	defer aof.Close()
@@ -44,8 +44,7 @@ func main() {
 	for {
     conn, err := l.Accept()
     if err != nil {
-      _, fn, line, _ := runtime.Caller(1)
-      fmt.Println(fn, line, "Error accepting connection: " + err.Error())
+      fmt.Println(rerror.ErrWrap(err).FormatAndError("Error accepting connection"))
 			continue
     }
 
@@ -59,27 +58,48 @@ func handleConnection(conn net.Conn, aof *Aof) {
 		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
-      if err.Error() == "EOF" {
+      //if err.Error() == "EOF" { if it ends in EOF, then it's a client disconnect
+      if strings.Contains(err.Error(), "EOF") {
         fmt.Println("Connection closed")
         return
       }
-      fmt.Println(err.Error())
+      errString := rerror.ErrInternal.FormatAndError("Error reading value")
+      if rerror.DEBUG {
+        custom := fmt.Sprintf("value.Typ: %s, value.Str: %s, value.Num: %d, value.Bulk: %s, value.Array: %v", value.Typ, value.Str, value.Num, value.Bulk, value.Array)
+        errString = rerror.ErrInternal.FormatAndError("Error reading value: %s", custom)
+      }
+      fmt.Println(rerror.ErrWrap(err).FormatAndError(errString))
 			return
 		}
 
 		if value.Typ != "array" {
-			fmt.Println("Invalid request, expected array")
+			fmt.Println(rerror.ErrInternal.FormatAndError("Invalid request, expected array"))
 			continue
 		}
 
 		if len(value.Array) == 0 {
-			fmt.Println("Invalid request, expected array length > 0")
+      fmt.Println(rerror.ErrWrap(err).FormatAndError("Invalid request, expected array length > 0"))
 			continue
 		}
 
-    command := strings.ToLower(value.Array[0].Bulk)
+    // combine each element's Bulk into a string
+    // stop once the command registry won't recognize the command
+    str := ""
+    tempVal := ""
+    i := 0
+    for _, v := range value.Array {
+      tempVal = " " + str + v.Bulk
+      if _, exists := commands.Registry.Commands[strings.ToLower(strings.TrimSpace(tempVal))]; !exists {
+        break
+      }
+      str = tempVal
+      i++
+    }
 
-		args := value.Array[1:]
+    command := strings.ToLower(strings.TrimSpace(str))
+    fmt.Println("Command: ", command)
+
+    args := value.Array[i + 1:]
 
 		writer := resp.NewWriter(conn)
 

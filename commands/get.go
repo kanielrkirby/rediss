@@ -16,7 +16,6 @@ func get(args []resp.Value) resp.Value {
 	}
 
 	key := args[0].Bulk
-  fmt.Println("key: ", key)
 
 	SETsMu.RLock()
 	value, ok := SETs[key]
