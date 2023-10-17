@@ -2,57 +2,84 @@ package rerror
 
 import (
 	"fmt"
+  "runtime"
 )
 
-// RedisError: Code, Message, and Args (args are string formatting args).
+// RedisError represents a custom error code and message, with args to format the message using fmt.Sprintf.
 type RedisError struct {
 	Code    string
 	Message string
 	Args    []interface{}
 }
 
-// RedisErrorCode: Code and Message.
-type RedisErrorCode struct {
+// redisErrorCode represents a custom error code and message.
+type redisErrorCode struct {
 	Code    string
 	Message string
 }
 
-// DefineError: Define a new error code and message.
-func DefineError(code string, message string) *RedisErrorCode {
-	return &RedisErrorCode{Code: code, Message: message}
+// defineError creates a redisErrorCode from a code and message, typically used to establish known error enums.
+func defineError(code string, message string) *redisErrorCode {
+	return &redisErrorCode{Code: code, Message: message}
 }
 
-// A map of RedisErrorCodes to their messages.
 var (
-	ERR_OK                  = DefineError("OK", "OK")
-	ERR_CANCELLED           = DefineError("CANCELLED", "Operation cancelled")
-	ERR_UNKNOWN             = DefineError("UNKNOWN", "Unknown error")
-	ERR_INVALID_ARGUMENT    = DefineError("INVALID_ARGUMENT", "Invalid argument")
-	ERR_DEADLINE_EXCEEDED   = DefineError("DEADLINE_EXCEEDED", "Deadline exceeded")
-	ERR_NOT_FOUND           = DefineError("NOT_FOUND", "Key not found")
-	ERR_ALREADY_EXISTS      = DefineError("ALREADY_EXISTS", "Key already exists")
-	ERR_PERMISSION_DENIED   = DefineError("PERMISSION_DENIED", "Permission denied")
-	ERR_RESOURCE_EXHAUSTED  = DefineError("RESOURCE_EXHAUSTED", "Resource exhausted")
-	ERR_FAILED_PRECONDITION = DefineError("FAILED_PRECONDITION", "Failed precondition")
-	ERR_ABORTED             = DefineError("ABORTED", "Aborted")
-	ERR_OUT_OF_RANGE        = DefineError("OUT_OF_RANGE", "Out of range")
-	ERR_UNIMPLEMENTED       = DefineError("UNIMPLEMENTED", "Command not implemented yet, but is planned.")
-	ERR_INTERNAL            = DefineError("INTERNAL", "Internal error")
-	ERR_UNAVAILABLE         = DefineError("UNAVAILABLE", "Service unavailable")
-	ERR_DATA_LOSS           = DefineError("DATA_LOSS", "Data loss")
-	ERR_UNAUTHENTICATED     = DefineError("UNAUTHENTICATED", "Unauthenticated")
-	ERR_UNKNOWN_SUBCOMMAND  = DefineError("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
+  // ErrOk is used to indicate that the operation was successful.
+	ErrOk                  = defineError("OK", "OK")
+  // ErrCancelled is used to indicate that the operation was cancelled.
+	ErrCancelled           = defineError("CANCELLED", "Operation cancelled")
+  // ErrUnknown is used to indicate that the operation failed for an unknown reason.
+	ErrUnknown             = defineError("UNKNOWN", "Unknown error")
+  // ErrInvalidArgument is used to indicate that the operation was given an invalid argument.
+	ErrInvalidArgument    = defineError("INVALID_ARGUMENT", "Invalid argument")
+  // ErrDeadlineExceeded is used to indicate that the operation exceeded its deadline.
+	ErrDeadlineExceeded   = defineError("DEADLINE_EXCEEDED", "Deadline exceeded")
+  // ErrNotFound is used to indicate that the requested entity was not found.
+	ErrNotFound           = defineError("NOT_FOUND", "Key not found")
+  // ErrAlreadyExists is used to indicate that the entity that a caller attempted to create already exists.
+	ErrAlreadyExists      = defineError("ALREADY_EXISTS", "Key already exists")
+  // ErrPermissionDenied is used to indicate that the caller does not have permission to execute the specified operation.
+	ErrPermissionDenied   = defineError("PERMISSION_DENIED", "Permission denied")
+  // ErrResourceExhausted is used to indicate that some resource has been exhausted, perhaps a per-user quota, or perhaps the entire file system is out of space.
+	ErrResourceExhausted  = defineError("RESOURCE_EXHAUSTED", "Resource exhausted")
+  // ErrFailedPrecondition is used to indicate that the operation was rejected because the system is not in a state required for the operation's execution.
+	ErrFailedPrecondition = defineError("FAILED_PRECONDITION", "Failed precondition")
+  // ErrAborted is used to indicate that the operation was aborted, typically due to a concurrency issue like sequencer check failures, transaction aborts, etc.
+	ErrAborted             = defineError("ABORTED", "Aborted")
+  // ErrOutOfRange is used to indicate that the operation was attempted past the valid range.
+	ErrOutOfRange        = defineError("OUT_OF_RANGE", "Out of range")
+  // ErrUnimplemented is used to indicate that the operation is not implemented or is not supported/enabled in this service.
+	ErrUnimplemented       = defineError("UNIMPLEMENTED", "Command not implemented yet, but is planned.")
+  // ErrInternal is used to indicate that an internal error occurred.
+	ErrInternal            = defineError("INTERNAL", "Internal error")
+  // ErrUnavailable is used to indicate that the service is currently unavailable.
+	ErrUnavailable         = defineError("UNAVAILABLE", "Service unavailable")
+  // ErrDataLoss is used to indicate that unrecoverable data loss or corruption occurred.
+	ErrDataLoss           = defineError("DATA_LOSS", "Data loss")
+  // ErrUnauthenticated is used to indicate that the request does not have valid authentication credentials for the operation.
+	ErrUnauthenticated     = defineError("UNAUTHENTICATED", "Unauthenticated")
+  // ErrUnknownSubcommand is used to indicate that the subcommand is not known. Provide "Subcommand" and "Command" to format the message.
+	ErrUnknownSubcommand  = defineError("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
+  // ErrWrongNumberOfArguments is used to indicate that the wrong number of arguments were provided. Provide "Subcommand" and "Command" to format the message.
+  ErrWrongNumberOfArguments = defineError("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try %s HELP.")
 )
 
-// Temporary boolean for debugging
+// isDebug is used to determine whether to show the function and line number of the error.
 var isDebug bool = true
 
-// Error: Return the error message, formatted with Sprintf.
+// Error formats the error message using fmt.Sprintf and returns it.
 func (e *RedisError) Error() string {
-	return fmt.Sprintf(e.Message, e.Args...)
+  if !isDebug {
+    return fmt.Sprintf(e.Message, e.Args...)
+  }
+  funcName, file, line, _ := runtime.Caller(3)
+  return fmt.Sprintf("%s:%d %s: %s", file, line, runtime.FuncForPC(funcName).Name(), fmt.Sprintf(e.Message, e.Args...))
 }
 
-// New: Provide args to format the error message.
-func New(Code *RedisErrorCode, args ...interface{}) error {
+// New creates a new RedisError from a redisErrorCode and args meant to format the message using fmt.Sprintf.
+func New(Code *redisErrorCode, args ...interface{}) error {
+  if args == nil {
+    args = make([]interface{}, 0)
+  }
 	return &RedisError{Code: Code.Code, Message: Code.Message, Args: args}
 }
