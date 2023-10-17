@@ -2,7 +2,7 @@ package commands
 
 import (
   "github.com/piratey7007/rediss/resp"
-  "github.com/piratey7007/rediss/errorHandler"
+  "github.com/piratey7007/rediss/rerror"
 )
 
 func init() {
@@ -11,7 +11,7 @@ func init() {
 
 func set(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("set")}
+		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("set")}
 	}
 
 	key := args[0].Bulk

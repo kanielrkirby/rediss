@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+  "runtime"
 
 	"github.com/piratey7007/rediss/commands"
 	"github.com/piratey7007/rediss/resp"
@@ -14,13 +15,15 @@ func main() {
 
 	l, err := net.Listen("tcp", ":6379")
 	if err != nil {
-		fmt.Println(err)
+    _, fn, line, _ := runtime.Caller(1)
+		fmt.Println(fn, line, err)
 		return
 	}
 
 	aof, err := NewAof("database.aof")
 	if err != nil {
-		fmt.Println(err)
+    _, fn, line, _ := runtime.Caller(1)
+		fmt.Println(fn, line, err)
 		return
 	}
 	defer aof.Close()
@@ -41,7 +44,8 @@ func main() {
 	for {
     conn, err := l.Accept()
     if err != nil {
-      fmt.Println("Error accepting connection: " + err.Error())
+      _, fn, line, _ := runtime.Caller(1)
+      fmt.Println(fn, line, "Error accepting connection: " + err.Error())
 			continue
     }
 

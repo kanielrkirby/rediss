@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/piratey7007/rediss/resp"
 	"strings"
-	"github.com/piratey7007/rediss/errorHandler"
+	"github.com/piratey7007/rediss/rerror"
 )
 
 func init() {
@@ -56,28 +56,28 @@ func list(args []resp.Value) resp.Value {
 func info(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
   }
 }
 
 func docs(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
   }
 }
 
 func getKeys(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
   }
 }
 
 func getKeysAndFlags(args []resp.Value) resp.Value {
   return resp.Value{
     Typ: "error",
-    Str: errorHandler.KnownStatus["UNIMPLEMENTED"].Message,
+    Str: rerror.KnownStatus["UNIMPLEMENTED"].Message,
   }
 }
 

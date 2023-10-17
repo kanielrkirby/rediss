@@ -2,7 +2,7 @@ package commands
 
 import (
   "github.com/piratey7007/rediss/resp"
-  "github.com/piratey7007/rediss/errorHandler"
+  "github.com/piratey7007/rediss/rerror"
 )
 
 func init() {
@@ -11,7 +11,7 @@ func init() {
 
 func hset(args []resp.Value) resp.Value {
 	if len(args) != 3 {
-		return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("hset")}
+		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("hset")}
 	}
 
 	hash := args[0].Bulk

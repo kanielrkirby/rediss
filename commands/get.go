@@ -2,7 +2,7 @@ package commands
 
 import (
   "fmt"
-  "github.com/piratey7007/rediss/errorHandler"
+  "github.com/piratey7007/rediss/rerror"
   "github.com/piratey7007/rediss/resp"
 )
 
@@ -12,7 +12,7 @@ func init() {
 
 func get(args []resp.Value) resp.Value {
 	if len(args) != 1 {
-		return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("get")}
+		return resp.Value{Typ: "error", Str: rerror.ArgumentCount("get")}
 	}
 
 	key := args[0].Bulk
