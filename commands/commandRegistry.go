@@ -1,13 +1,13 @@
 package commands
 
 import (
-  "os"
-  "encoding/json"
-  "github.com/piratey7007/rediss/resp"
-  "log"
-  "fmt"
-  "path/filepath"
-  "strings"
+	"encoding/json"
+	"fmt"
+	"github.com/piratey7007/rediss/resp"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 type CommandMetadata struct {
@@ -17,48 +17,50 @@ type CommandMetadata struct {
 }
 
 type Command struct {
-  Execute func(args []resp.Value) resp.Value
-  CommandMetadata
+	Execute func(args []resp.Value) resp.Value
+	CommandMetadata
 }
 
-
 type registry struct {
-  Commands map[string]Command
+	Commands map[string]Command
 }
 
 var Registry = &registry{
-  Commands: make(map[string]Command),
+	Commands: make(map[string]Command),
 }
 
-func (r *registry) Register(name string, cmd func (args []resp.Value) resp.Value) error {
-  kebabName := strings.ReplaceAll(name, " ", "-")
-  path := filepath.Join("commands", "json", fmt.Sprintf("%s.json", kebabName))
-  metadata, err := ReadJSON(path)
-  if err != nil {
-    log.Fatal(err)
-  }
+func (r *registry) Register(name string, cmd func(args []resp.Value) resp.Value) error {
+	path := filepath.Join(
+		"commands",
+		"json",
+		fmt.Sprintf("%s.json",
+			strings.ReplaceAll(name, " ", "-")))
+      
+	metadata, err := ReadJSON(path)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  r.Commands[name] = Command{
-    Execute: cmd,
-    CommandMetadata: metadata,
-  }
+	r.Commands[name] = Command{
+		Execute:         cmd,
+		CommandMetadata: metadata,
+	}
 
-  return nil
+	return nil
 }
 
 func ReadJSON(path string) (CommandMetadata, error) {
-  file, err := os.Open(path)
-  if err != nil {
-    return CommandMetadata{}, err
-  }
-  defer file.Close()
+	file, err := os.Open(path)
+	if err != nil {
+		return CommandMetadata{}, err
+	}
+	defer file.Close()
 
-  var metadata CommandMetadata
-  err = json.NewDecoder(file).Decode(&metadata)
-  if err != nil {
-    return CommandMetadata{}, err
-  }
+	var metadata CommandMetadata
+	err = json.NewDecoder(file).Decode(&metadata)
+	if err != nil {
+		return CommandMetadata{}, err
+	}
 
-  return metadata, nil
+	return metadata, nil
 }
-

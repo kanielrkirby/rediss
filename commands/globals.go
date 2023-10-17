@@ -2,7 +2,6 @@ package commands
 
 import (
   "sync"
-  _"github.com/piratey7007/rediss/resp"
 )
 
 var SETs = map[string]string{}

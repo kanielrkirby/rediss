@@ -2,6 +2,7 @@ package commands
 
 import (
   "github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/errorHandler"
 )
 
 func init() {
@@ -10,7 +11,7 @@ func init() {
 
 func del(args []resp.Value) resp.Value {
   if len(args) != 1 {
-    return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'del' command"}
+    return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("del")}
   }
 
   key := args[0].Bulk

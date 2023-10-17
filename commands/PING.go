@@ -2,6 +2,7 @@ package commands
 
 import (
   "github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/errorHandler"
 )
 
 func init() {
@@ -13,5 +14,5 @@ func ping(args []resp.Value) resp.Value {
 		return resp.Value{Typ: "string", Str: "PONG"}
 	}
 
-	return resp.Value{Typ: "string", Str: args[0].Bulk}
+  return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("ping")}
 }

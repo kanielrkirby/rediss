@@ -1,6 +1,7 @@
 package errorHandler
 
 import (
+  "fmt"
 )
 
 type RedisError struct {
@@ -36,4 +37,8 @@ func NewRedisError(code string, message string) RedisError {
     GrpcDescription: KnownStatus[code].GrpcDescription,
     Message: message,
   }
+}
+
+func ArgumentCount(command string) string {
+  return fmt.Sprintf("ERR wrong number of arguments for '%s' command", command)
 }

@@ -2,6 +2,7 @@ package commands
 
 import (
   "github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/errorHandler"
 )
 
 func init() {
@@ -10,7 +11,7 @@ func init() {
 
 func hget(args []resp.Value) resp.Value {
 	if len(args) != 2 {
-		return resp.Value{Typ: "error", Str: "ERR wrong number of arguments for 'hget' command"}
+		return resp.Value{Typ: "error", Str: errorHandler.ArgumentCount("hget")}
 	}
 
 	hash := args[0].Bulk
