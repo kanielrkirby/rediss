@@ -3,6 +3,7 @@ package rerror
 import (
 	"fmt"
   "runtime"
+  "strings"
 )
 
 // RedisError represents a custom error code and message, with args to format the message using fmt.Sprintf.
@@ -73,7 +74,7 @@ func (e *RedisError) Error() string {
   }
   stackBuf := make([]byte, 1024)
   runtime.Stack(stackBuf, true)
-  stack := string(stackBuf)
+  stack := strings.ReplaceAll(string(stackBuf), "\n", " ")
   return fmt.Sprintf("%s\n%s", stack, e.Message)
 }
 

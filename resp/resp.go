@@ -35,6 +35,9 @@ func NewResp(rd io.Reader) *Resp {
 
 // readLine reads a line from the reader until it reaches \r\n.
 func (r *Resp) readLine() (line []byte, n int, err error) {
+	for _, b := range line {
+		fmt.Println(string(b))
+	}
 	for {
 		b, err := r.reader.ReadByte()
 		if err != nil {
@@ -46,16 +49,15 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 			break
 		}
 	}
-  fmt.Println("line: ", line[:len(line)-2])
 	return line[:len(line)-2], n, nil
 }
 
 // readInteger reads the line and parses the result as an integer.
 func (r *Resp) readInteger() (x int, n int, err error) {
 	line, n, err := r.readLine()
-  for i := 0; i < len(line); i++ {
-    fmt.Print(line[i])
-  }
+	for i := 0; i < len(line); i++ {
+		fmt.Print(line[i])
+	}
 	if err != nil {
 		return 0, 0, rerror.ErrWrap(err).Format("Error reading line")
 	}
@@ -67,9 +69,20 @@ func (r *Resp) readInteger() (x int, n int, err error) {
 }
 
 // Read reads a RESP value from the reader. This is the primary entry point for
-// reading RESP values.
+// reading RESP values. This is a blocking call.
 func (r *Resp) Read() (Value, error) {
 	_type, err := r.reader.ReadByte()
+
+
+  if _type == 0 {
+    fmt.Println("Start debug:")
+    // log if theres more bytes after for testing
+    if r.reader.Buffered() > 0 {
+      fmt.Println("More bytes after 0")
+    }
+    
+    return Value{}, errors.New("EOF")
+  }
 
 	if err != nil {
 		return Value{}, rerror.ErrWrap(err).Format("Error reading type")
@@ -81,13 +94,13 @@ func (r *Resp) Read() (Value, error) {
 	case BULK:
 		return r.readBulk()
 	default:
-    fmt.Printf(rerror.ErrUnknownType.FormatAndError(string(_type)))
+		fmt.Printf(rerror.ErrUnknownType.FormatAndError(string(_type)))
 		return Value{}, nil
 	}
 }
 
 // readArray reads an array from the reader, and reads each of the values in
-// the array.
+// the array. Formatting: *<length>\r\n<values>
 func (r *Resp) readArray() (Value, error) {
 	v := Value{}
 	v.Typ = "array"
@@ -141,7 +154,6 @@ func (r *Resp) readBulk() (Value, error) {
 
 // Marshal returns the RESP encoding of the value.
 func (v Value) Marshal() []byte {
-  fmt.Println("Marshal: ", v)
 	switch v.Typ {
 	case "array":
 		return v.marshalArray()
@@ -225,7 +237,7 @@ func NewWriter(w io.Writer) *Writer {
 
 // Write writes a RESP value to the writer.
 func (w *Writer) Write(v Value) error {
-  fmt.Println("Write: ", v)
+	fmt.Println("Write: ", v)
 	var bytes = v.Marshal()
 
 	_, err := w.writer.Write(bytes)
