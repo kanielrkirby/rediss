@@ -2,15 +2,15 @@ package cmd
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"net"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
   "github.com/spf13/viper"
+  
+  "github.com/piratey7007/rediss/client/resp"
 )
 
 type ConnectionOptions struct {
@@ -94,14 +94,14 @@ func connectToServer(options ConnectionOptions) {
       break
     }
 
-    respCommand := convertToRESP(strings.Fields(input))
+    respCommand := resp.ConvertToRESP(strings.Fields(input))
     
     if _, err := conn.Write([]byte(respCommand)); err != nil {
       fmt.Println("Failed to send to Redis:", err)
       continue 
     }
 
-    respResponse, err := convertFromRESP(responseReader)
+    respResponse, err := resp.ConvertFromRESP(responseReader)
     if err != nil {
       fmt.Println("Failed to convert response:", err)
       continue
@@ -115,66 +115,3 @@ func Run() {
 	cobra.CheckErr(rootCmd.Execute())
 }
 
-func convertToRESP(commandPieces []string) string {
-	
-	var resp strings.Builder
-
-	fmt.Fprintf(&resp, "*%d\r\n", len(commandPieces))
-
-	for _, piece := range commandPieces {
-		fmt.Fprintf(&resp, "$%d\r\n%s\r\n", len(piece), piece)
-	}
-
-	return resp.String()
-}
-
-func convertFromRESP(reader *bufio.Reader) (string, error) {
-	_type, err := reader.ReadByte()
-	if err != nil {
-		return "", err
-	}
-
-	switch _type {
-	case '+', '-', ':':
-		line, _, err := reader.ReadLine()
-		if err != nil {
-			return "", err
-		}
-		return string(line), nil
-	case '$':
-		lengthStr, _, err := reader.ReadLine()
-		if err != nil {
-			return "", err
-		}
-
-		length, err := strconv.Atoi(string(lengthStr))
-		if err != nil {
-			return "", err
-		}
-
-		if length == -1 {
-			return "(nil)", nil
-		}
-
-		data := make([]byte, length)
-		_, err = reader.Read(data)
-		if err != nil {
-			fmt.Println("Read error: ", err)
-			return "", err
-		}
-		fmt.Println("Read success")
-
-		_, err = reader.Discard(2)
-		if err != nil {
-			fmt.Println("Discard error: ", err)
-			return "", err
-		}
-		fmt.Println("Discard success")
-
-		return string(data), nil
-	case '*': 
-		return "", errors.New("array parsing not implemented")
-	default:
-		return "", errors.New("unknown data type")
-	}
-}
