@@ -66,8 +66,8 @@ func handleConnection(conn net.Conn, aof *Aof) {
 		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
-			if strings.Contains(err.Error(), "EOF") {
-				fmt.Println("Connection closed")
+      if strings.HasSuffix(err.Error(), "EOF") {
+        fmt.Println("Connection closed")
 				return
 			}
 			errString := rerror.ErrInternal.FormatAndError("Error reading value")
@@ -126,6 +126,5 @@ func handleConnection(conn net.Conn, aof *Aof) {
 
 		result := cmd.Execute(args)
 		writer.Write(result)
-		fmt.Println("COmplete")
 	}
 }

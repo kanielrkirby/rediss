@@ -71,10 +71,14 @@ func (r *Resp) readInteger() (x int, n int, err error) {
 // Read reads a RESP value from the reader. This is the primary entry point for
 // reading RESP values. This is a blocking call.
 func (r *Resp) Read() (Value, error) {
+  fmt.Println("Read:")
 	_type, err := r.reader.ReadByte()
+  fmt.Println("Read: after read byte")
+  fmt.Println("Read: _type: ", string(_type))
 
 
   if _type == 0 {
+    fmt.Println("Read: _type == 0")
     fmt.Println("Start debug:")
     // log if theres more bytes after for testing
     if r.reader.Buffered() > 0 {
@@ -83,10 +87,13 @@ func (r *Resp) Read() (Value, error) {
     
     return Value{}, errors.New("EOF")
   }
+  fmt.Println("Read: _type != 0")
 
 	if err != nil {
+    fmt.Println("Read: err != nil")
 		return Value{}, rerror.ErrWrap(err).Format("Error reading type")
 	}
+  fmt.Println("Read: err == nil")
 
 	switch _type {
 	case ARRAY:
@@ -237,7 +244,23 @@ func NewWriter(w io.Writer) *Writer {
 
 // Write writes a RESP value to the writer.
 func (w *Writer) Write(v Value) error {
-	fmt.Println("Write: ", v)
+	fmt.Println("Write: ")
+  switch v.Typ {
+      case "array":
+        for i := 0; i < len(v.Array); i++ {
+          fmt.Printf("Write: array: %d", i)
+        }
+      case "bulk":
+        fmt.Printf("Write: bulk: %s", v.Bulk)
+      case "string":
+        fmt.Printf("Write: string: %s", v.Str)
+      case "null":
+        fmt.Printf("Write: null")
+      case "error":
+        fmt.Printf("Write: error: %s", v.Str)
+      default:
+        fmt.Printf("Write: default")
+  }
 	var bytes = v.Marshal()
 
 	_, err := w.writer.Write(bytes)

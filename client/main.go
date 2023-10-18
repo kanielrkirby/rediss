@@ -1,7 +1,9 @@
 package main
 
-import ()
+import (
+  "github.com/piratey7007/rediss/client/cmd"
+)
 
 func main() {
-
+  cmd.Execute()
 }
