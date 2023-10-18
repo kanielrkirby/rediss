@@ -7,7 +7,7 @@ import (
   "os"
   "strings"
 
-  "github.com/piratey7007/rediss/client/resp"
+  "github.com/piratey7007/rediss/internal/resp"
 )
 
 type ConnectionOptions struct {
