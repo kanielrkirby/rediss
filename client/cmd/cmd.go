@@ -1,24 +1,13 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"net"
-	"os"
-	"strings"
 
 	"github.com/spf13/cobra"
   "github.com/spf13/viper"
   
-  "github.com/piratey7007/rediss/client/resp"
+  "github.com/piratey7007/rediss/client/connections"
 )
-
-type ConnectionOptions struct {
-  host string
-  port int
-  password string
-  db int
-}
 
 var rootCmd = &cobra.Command{
 	Use:   "rediss-cli",
@@ -26,13 +15,13 @@ var rootCmd = &cobra.Command{
 	Long: `A custom, simplified CLI to interact with Rediss server that takes user commands,
 converts them to the Redis Serialization Protocol (RESP), and forwards them to the Rediss server.`,
 	Run: func(cmd *cobra.Command, args []string) {
-    options := ConnectionOptions{
-      host: viper.GetString("bind"),
-      port: viper.GetInt("port"),
-      password: viper.GetString("password"),
-      db: viper.GetInt("db"),
+    options := connections.ConnectionOptions{
+      Host: viper.GetString("bind"),
+      Port: viper.GetInt("port"),
+      Password: viper.GetString("password"),
+      Db: viper.GetInt("db"),
     }
-    connectToServer(options)
+    connections.ConnectToServer(options)
 	},
   
 }
@@ -63,51 +52,6 @@ func initConfig() {
 
   if err := viper.ReadInConfig(); err != nil {
     fmt.Println("Error reading config file:", err)
-  }
-}
-
-func connectToServer(options ConnectionOptions) {
-  conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", options.host, options.port))
-  if err != nil {
-    fmt.Println("Failed to connect to Redis", err)
-    return
-  }
-  defer conn.Close()
-
-  scanner := bufio.NewScanner(os.Stdin)
-  responseReader := bufio.NewReader(conn)
-  fmt.Println("Connected to Redis server. You may start typing commands.")
-
-  for {
-    fmt.Print("redis-cli> ")
-
-    if !scanner.Scan() {
-      if err := scanner.Err(); err != nil {
-        fmt.Fprintf(os.Stderr, "Error reading from input: %s\n", err)
-        os.Exit(1) 
-      }
-      break
-    }
-    
-    input := scanner.Text()
-    if input == "exit" {
-      break
-    }
-
-    respCommand := resp.ConvertToRESP(strings.Fields(input))
-    
-    if _, err := conn.Write([]byte(respCommand)); err != nil {
-      fmt.Println("Failed to send to Redis:", err)
-      continue 
-    }
-
-    respResponse, err := resp.ConvertFromRESP(responseReader)
-    if err != nil {
-      fmt.Println("Failed to convert response:", err)
-      continue
-    }
-
-    fmt.Println(respResponse)
   }
 }
 
