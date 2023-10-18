@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/piratey7007/rediss/commands"
-	"github.com/piratey7007/rediss/rerror"
-	"github.com/piratey7007/rediss/resp"
+	"github.com/piratey7007/rediss/server/commands"
+	"github.com/piratey7007/rediss/server/rerror"
+	"github.com/piratey7007/rediss/server/resp"
 )
 
 func main() {

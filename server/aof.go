@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 	"time"
-  "github.com/piratey7007/rediss/resp"
+  "github.com/piratey7007/rediss/server/resp"
 )
 
 // Aof represents an append-only file.

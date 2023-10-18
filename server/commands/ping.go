@@ -1,8 +1,8 @@
 package commands
 
 import (
-  "github.com/piratey7007/rediss/resp"
-  "github.com/piratey7007/rediss/rerror"
+  "github.com/piratey7007/rediss/server/resp"
+  "github.com/piratey7007/rediss/server/rerror"
 )
 
 func init() {
