@@ -3,7 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/piratey7007/rediss/server/resp"
+	"github.com/piratey7007/rediss/lib/resp"
 	"log"
 	"os"
 	"path/filepath"

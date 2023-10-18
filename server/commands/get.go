@@ -2,8 +2,8 @@ package commands
 
 import (
   "fmt"
-  "github.com/piratey7007/rediss/server/rerror"
-  "github.com/piratey7007/rediss/server/resp"
+  "github.com/piratey7007/rediss/lib/rerror"
+  "github.com/piratey7007/rediss/lib/resp"
 )
 
 func init() {

@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/piratey7007/rediss/internal/rerror"
+	"github.com/piratey7007/rediss/lib/rerror"
 	"io"
 	"strconv"
 )
