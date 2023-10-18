@@ -10,7 +10,15 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+  "github.com/spf13/viper"
 )
+
+type ConnectionOptions struct {
+  host string
+  port int
+  password string
+  db int
+}
 
 var rootCmd = &cobra.Command{
 	Use:   "rediss-cli",
@@ -18,82 +26,104 @@ var rootCmd = &cobra.Command{
 	Long: `A custom, simplified CLI to interact with Rediss server that takes user commands,
 converts them to the Redis Serialization Protocol (RESP), and forwards them to the Rediss server.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		interactWithRedisServer()
+    options := ConnectionOptions{
+      host: viper.GetString("bind"),
+      port: viper.GetInt("port"),
+      password: viper.GetString("password"),
+      db: viper.GetInt("db"),
+    }
+    connectToServer(options)
 	},
+  
 }
 
-func Execute() {
-	cobra.CheckErr(rootCmd.Execute())
+func init() {
+  helpFlag := false
+  rootCmd.PersistentFlags().BoolVarP(&helpFlag, "help", "", false, "Help default flag")
+  cobra.OnInitialize(initConfig)
+  rootCmd.PersistentFlags().StringP("host", "h", "localhost", "The host to bind to")
+  rootCmd.PersistentFlags().IntP("port", "p", 6379, "The port to bind to")
+  rootCmd.PersistentFlags().StringP("password", "a", "", "The password to use when connecting to the server")
+  rootCmd.PersistentFlags().IntP("db", "n", 0, "The database to use when connecting to the server")
+  viper.BindPFlag("bind", rootCmd.PersistentFlags().Lookup("host"))
+  viper.BindPFlag("port", rootCmd.PersistentFlags().Lookup("port"))
+  viper.BindPFlag("password", rootCmd.PersistentFlags().Lookup("password"))
+  viper.BindPFlag("db", rootCmd.PersistentFlags().Lookup("db"))
 }
 
-func interactWithRedisServer() {
-	// Create a scanner to read input line by line, which is more reliable across different systems.
+func initConfig() {
+  viper.SetConfigName("config")
+  viper.AddConfigPath(".")
+  viper.SetConfigType("conf")
 
-	conn, err := net.Dial("tcp", ":6379")
-	if err != nil {
-		fmt.Println("Failed to connect to Redis", err)
-		return
-	}
-	defer conn.Close()
+  viper.SetDefault("bind", "localhost")
+  viper.SetDefault("port", 6379)
+  viper.SetDefault("password", "")
+  viper.SetDefault("db", 0)
 
-	scanner := bufio.NewScanner(os.Stdin)
-	responseReader := bufio.NewReader(conn)
+  if err := viper.ReadInConfig(); err != nil {
+    fmt.Println("Error reading config file:", err)
+  }
+}
 
-	fmt.Println("Connected to Redis server. You may start typing commands.")
-	for {
-		fmt.Print("redis-cli> ")
+func connectToServer(options ConnectionOptions) {
+  conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", options.host, options.port))
+  if err != nil {
+    fmt.Println("Failed to connect to Redis", err)
+    return
+  }
+  defer conn.Close()
 
-		// Scanner will read the next token (line in this case) when 'Scan' is called
-		if !scanner.Scan() {
-			if err := scanner.Err(); err != nil {
-				fmt.Fprintf(os.Stderr, "Error reading from input: %s\n", err)
-				os.Exit(1) // or handle the error as appropriate in your application.
-			}
-			// If it reaches here, it might be that the scanner reached the end of the input (EOF),
-			// so you might want to handle that case, for example, exit the loop or the program.
-			break
-		}
+  scanner := bufio.NewScanner(os.Stdin)
+  responseReader := bufio.NewReader(conn)
+  fmt.Println("Connected to Redis server. You may start typing commands.")
 
-		// Obtain the text that has been scanned
-		input := scanner.Text()
+  for {
+    fmt.Print("redis-cli> ")
+
+    if !scanner.Scan() {
+      if err := scanner.Err(); err != nil {
+        fmt.Fprintf(os.Stderr, "Error reading from input: %s\n", err)
+        os.Exit(1) 
+      }
+      break
+    }
+    
+    input := scanner.Text()
     if input == "exit" {
       break
     }
 
-		// Convert the command to RESP format
-		respCommand := convertToRESP(strings.Fields(input))
+    respCommand := convertToRESP(strings.Fields(input))
+    
+    if _, err := conn.Write([]byte(respCommand)); err != nil {
+      fmt.Println("Failed to send to Redis:", err)
+      continue 
+    }
 
-		// Send the command to the server
-		if _, err := conn.Write([]byte(respCommand)); err != nil {
-			fmt.Println("Failed to send to Redis:", err)
-			continue // Or handle the error as you prefer
-		}
+    respResponse, err := convertFromRESP(responseReader)
+    if err != nil {
+      fmt.Println("Failed to convert response:", err)
+      continue
+    }
 
-		respResponse, err := convertFromRESP(responseReader)
-		if err != nil {
-			fmt.Println("Failed to convert response:", err)
-			continue
-		}
+    fmt.Println(respResponse)
+  }
+}
 
-		// Print the response
-		fmt.Println(respResponse)
-	}
+func Run() {
+	cobra.CheckErr(rootCmd.Execute())
 }
 
 func convertToRESP(commandPieces []string) string {
-	// Use a string builder for efficient string concatenation
+	
 	var resp strings.Builder
 
-	// Add the array prefix and size
 	fmt.Fprintf(&resp, "*%d\r\n", len(commandPieces))
 
 	for _, piece := range commandPieces {
-		// Add the bulk string header and the command piece itself
 		fmt.Fprintf(&resp, "$%d\r\n%s\r\n", len(piece), piece)
 	}
-
-	// For debugging: print the conversion. You might want to remove this in production code.
-	fmt.Printf("RESP Conversion: From: %s, To: %s\n", strings.Join(commandPieces, " "), strings.Join(strings.Split(resp.String(), "\r\n"), "\\r\\n"))
 
 	return resp.String()
 }
@@ -142,7 +172,7 @@ func convertFromRESP(reader *bufio.Reader) (string, error) {
 		fmt.Println("Discard success")
 
 		return string(data), nil
-	case '*': // Arrays
+	case '*': 
 		return "", errors.New("array parsing not implemented")
 	default:
 		return "", errors.New("unknown data type")
