@@ -35,8 +35,9 @@ func NewResp(rd io.Reader) *Resp {
 
 // readLine reads a line from the reader until it reaches \r\n.
 func (r *Resp) readLine() (line []byte, n int, err error) {
+  fmt.Println("ReadLine:")
 	for _, b := range line {
-		fmt.Println(string(b))
+    fmt.Printf("Byte line: '%s'\n", string(b))
 	}
 	for {
 		b, err := r.reader.ReadByte()
@@ -56,7 +57,7 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 func (r *Resp) readInteger() (x int, n int, err error) {
 	line, n, err := r.readLine()
 	for i := 0; i < len(line); i++ {
-		fmt.Print(line[i])
+    fmt.Printf("Byte Integer: '%s'\n", string(line[i]))
 	}
 	if err != nil {
 		return 0, 0, rerror.ErrWrap(err).Format("Error reading line")
@@ -248,18 +249,18 @@ func (w *Writer) Write(v Value) error {
   switch v.Typ {
       case "array":
         for i := 0; i < len(v.Array); i++ {
-          fmt.Printf("Write: array: %d", i)
+          fmt.Printf("Write: array: '%d'\n", i)
         }
       case "bulk":
-        fmt.Printf("Write: bulk: %s", v.Bulk)
+        fmt.Printf("Write: bulk: '%s'\n", v.Bulk)
       case "string":
-        fmt.Printf("Write: string: %s", v.Str)
+        fmt.Printf("Write: string: '%s'\n", v.Str)
       case "null":
-        fmt.Printf("Write: null")
+        fmt.Printf("Write: null\n")
       case "error":
-        fmt.Printf("Write: error: %s", v.Str)
+        fmt.Printf("Write: error: '%s'\n", v.Str)
       default:
-        fmt.Printf("Write: default")
+        fmt.Printf("Write: default\n")
   }
 	var bytes = v.Marshal()
 

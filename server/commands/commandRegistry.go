@@ -1,11 +1,14 @@
 package commands
 
 import (
-  _ "embed"
+	_ "embed"
 	"encoding/json"
-	"github.com/piratey7007/rediss/lib/resp"
+	"fmt"
 	"os"
 	"strings"
+
+	"github.com/piratey7007/rediss/lib/resp"
+  "github.com/piratey7007/rediss/lib/utils"
 )
 
 type CommandMetadata struct {
@@ -24,7 +27,7 @@ type registry struct {
 }
 
 var Registry = &registry{
-	Commands: make(map[string]Command),
+	Commands: map[string]Command{},
 }
 
 var jsonContent string
@@ -36,18 +39,20 @@ func (r *registry) Register(name string, cmd func(args []resp.Value) resp.Value)
 //		fmt.Sprintf("%s.json",
 //			strings.ReplaceAll(name, " ", "-")))
 //   metadata, err := ReadJSON(path)
+  fmt.Println("Register here: ______________________________________")
   var metadata CommandMetadata
 
-  content := strings.Replace(jsonContent, name, strings.ReplaceAll(name, " ", "-"), -1)
-  err := json.Unmarshal([]byte(content), &metadata)
+  err := utils.GetCommandJSON(strings.ReplaceAll(name, " ", "-"), &metadata)
   if err != nil {
     return err
   }
 
+  fmt.Println("Name here: ____________________________", name)
 	r.Commands[name] = Command{
 		Execute:         cmd,
 		CommandMetadata: metadata,
 	}
+  fmt.Println("done here: ____________________________", r.Commands)
 
 	return nil
 }

@@ -34,7 +34,7 @@ func main() {
 
 		cmd, exists := commands.Registry.Commands[commandName]
 		if !exists {
-			fmt.Println("Invalid command: ", commandName)
+			fmt.Printf("Invalid command AOF read: '%s'\n", commandName)
 			return
 		}
 
@@ -116,7 +116,7 @@ func handleConnection(conn net.Conn, aof *Aof) {
 
 		cmd, exists := commands.Registry.Commands[command]
 		if !exists {
-			fmt.Println("Invalid command: ", command)
+			fmt.Printf("Invalid command: '%s' \n", command)
 			continue
 		}
 
