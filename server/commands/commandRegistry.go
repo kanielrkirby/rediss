@@ -33,13 +33,6 @@ var Registry = &registry{
 var jsonContent string
 
 func (r *registry) Register(name string, cmd func(args []resp.Value) resp.Value) error {
-//	path := filepath.Join(
-//		"commands",
-//		"json",
-//		fmt.Sprintf("%s.json",
-//			strings.ReplaceAll(name, " ", "-")))
-//   metadata, err := ReadJSON(path)
-  fmt.Println("Register here: ______________________________________")
   var metadata CommandMetadata
 
   err := utils.GetCommandJSON(strings.ReplaceAll(name, " ", "-"), &metadata)
@@ -47,12 +40,10 @@ func (r *registry) Register(name string, cmd func(args []resp.Value) resp.Value)
     return err
   }
 
-  fmt.Println("Name here: ____________________________", name)
 	r.Commands[name] = Command{
 		Execute:         cmd,
 		CommandMetadata: metadata,
 	}
-  fmt.Println("done here: ____________________________", r.Commands)
 
 	return nil
 }
