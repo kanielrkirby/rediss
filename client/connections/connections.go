@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/piratey7007/rediss/lib/RESP"
+	"github.com/piratey7007/rediss/lib/resp"
 )
 
 type ConnectionOptions struct {
@@ -60,20 +60,20 @@ func ConnectToServer(options ConnectionOptions) {
 		}
 
 		bytes := value.Marshal()
-		fmt.Println("bytes:", bytes)
-		fmt.Println("string(bytes):", string(bytes))
 
 		if _, err := conn.Write(bytes); err != nil {
 			fmt.Println("Failed to send to Redis:", err)
 			continue
 		}
 
+    fmt.Println("'1'")
 		respResponse, err := RESP.Read()
 		if err != nil {
 			fmt.Println("Failed to convert response:", err)
 			continue
 		}
 
+    fmt.Println("'2'")
     switch respResponse.Typ {
     case "string":
       fmt.Println(respResponse.Str)
@@ -87,10 +87,9 @@ func ConnectToServer(options ConnectionOptions) {
       for _, respResponse := range respResponse.Array {
         fmt.Println(respResponse.Bulk)
       }
-    case "null":
-      fmt.Println("(nil)")
     default:
       fmt.Println("Unknown response type:", respResponse.Typ)
     }
+    fmt.Println("'3'")
 	}
 }

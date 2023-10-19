@@ -25,7 +25,6 @@ func get(args []resp.Value) resp.Value {
     fmt.Println("Key not found")
 		return resp.Value{Typ: "null"}
 	}
-  fmt.Println("Value: ", value)
 
 	return resp.Value{Typ: "bulk", Bulk: value}
 }

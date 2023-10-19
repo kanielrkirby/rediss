@@ -102,9 +102,6 @@ func handleConnection(conn net.Conn, aof *Aof) {
 		}
 
 		command := strings.ToLower(strings.TrimSpace(str))
-		if rerror.DEBUG {
-			fmt.Println("command: ", command)
-		}
 
 		args := []resp.Value{}
 
@@ -116,7 +113,6 @@ func handleConnection(conn net.Conn, aof *Aof) {
 
 		cmd, exists := commands.Registry.Commands[command]
 		if !exists {
-			fmt.Printf("Invalid command: '%s' \n", command)
 			continue
 		}
 
@@ -124,7 +120,12 @@ func handleConnection(conn net.Conn, aof *Aof) {
 			aof.Write(value)
 		}
 
+    fmt.Println("___________________________________Command: ", command)
+
 		result := cmd.Execute(args)
+
+    fmt.Println("___________________________________Result: ", result)
+
 		writer.Write(result)
 	}
 }
