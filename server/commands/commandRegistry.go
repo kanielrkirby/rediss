@@ -3,7 +3,6 @@ package commands
 import (
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 

@@ -98,9 +98,15 @@ func (r *Resp) Read() (Value, error) {
 
 	switch _type {
 	case ARRAY:
-		return r.readArray()
+		return r.readArrayAsValue()
 	case BULK:
-		return r.readBulk()
+		return r.readBulkAsValue()
+  case STRING:
+    return r.readStringAsValue()
+  case INTEGER:
+    return r.readIntegerAsValue()
+  case ERROR:
+    return r.readErrorAsValue()
 	default:
 		fmt.Printf(rerror.ErrUnknownType.FormatAndError(string(_type)))
 		return Value{}, nil
@@ -109,9 +115,10 @@ func (r *Resp) Read() (Value, error) {
 
 // readArray reads an array from the reader, and reads each of the values in
 // the array. Formatting: *<length>\r\n<values>
-func (r *Resp) readArray() (Value, error) {
-	v := Value{}
-	v.Typ = "array"
+func (r *Resp) readArrayAsValue() (Value, error) {
+	v := Value{
+    Typ: "array",
+  }
 
 	len, _, err := r.readInteger()
 	if err != nil {
@@ -133,7 +140,7 @@ func (r *Resp) readArray() (Value, error) {
 
 // readBulk reads a bulk string from the reader.
 // Formatting: $<length>\r\n<bytes>\r\n
-func (r *Resp) readBulk() (Value, error) {
+func (r *Resp) readBulkAsValue() (Value, error) {
 	v := Value{}
 
 	v.Typ = "bulk"
@@ -158,6 +165,57 @@ func (r *Resp) readBulk() (Value, error) {
 	}
 
 	return v, nil
+}
+
+// readString reads a string from the reader.
+// Formatting: +<string>\r\n
+func (r *Resp) readStringAsValue() (Value, error) {
+  v := Value{
+    Typ: "string",
+  }
+
+  line, _, err := r.readLine()
+  if err != nil {
+    return v, rerror.ErrWrap(err).Format("Error reading string")
+  }
+
+  v.Str = string(line)
+
+  return v, nil
+}
+
+// readError reads an error from the reader.
+// Formatting: -<string>\r\n
+func (r *Resp) readErrorAsValue() (Value, error) {
+  v := Value{
+    Typ: "error",
+  }
+
+  line, _, err := r.readLine()
+  if err != nil {
+    return v, rerror.ErrWrap(err).Format("Error reading error")
+  }
+
+  v.Str = string(line)
+
+  return v, nil
+}
+
+// readInteger reads an integer from the reader.
+// Formatting: :<integer>\r\n
+func (r *Resp) readIntegerAsValue() (Value, error) {
+  v := Value{
+    Typ: "int",
+  }
+
+  num, _, err := r.readInteger()
+  if err != nil {
+    return v, rerror.ErrWrap(err).Format("Error reading integer")
+  }
+
+  v.Num = num
+
+  return v, nil
 }
 
 // Marshal returns the RESP encoding of the value.
@@ -245,23 +303,6 @@ func NewWriter(w io.Writer) *Writer {
 
 // Write writes a RESP value to the writer.
 func (w *Writer) Write(v Value) error {
-	fmt.Println("Write: ")
-  switch v.Typ {
-      case "array":
-        for i := 0; i < len(v.Array); i++ {
-          fmt.Printf("Write: array: '%d'\n", i)
-        }
-      case "bulk":
-        fmt.Printf("Write: bulk: '%s'\n", v.Bulk)
-      case "string":
-        fmt.Printf("Write: string: '%s'\n", v.Str)
-      case "null":
-        fmt.Printf("Write: null\n")
-      case "error":
-        fmt.Printf("Write: error: '%s'\n", v.Str)
-      default:
-        fmt.Printf("Write: default\n")
-  }
 	var bytes = v.Marshal()
 
 	_, err := w.writer.Write(bytes)
