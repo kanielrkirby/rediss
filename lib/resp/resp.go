@@ -287,10 +287,7 @@ func NewWriter(w io.Writer) *Writer {
 
 // Write writes a RESP value to the writer.
 func (w *Writer) Write(v Value) error {
-  fmt.Println("Writing value start: ", v.Typ, v.Str, v.Num, v.Bulk, v.Array)
 	var bytes = v.Marshal()
-  fmt.Println("Marshalled: ", bytes, string(bytes))
-
 
 	_, err := w.writer.Write(bytes)
 	if err != nil {

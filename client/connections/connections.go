@@ -66,14 +66,12 @@ func ConnectToServer(options ConnectionOptions) {
 			continue
 		}
 
-    fmt.Println("'1'")
 		respResponse, err := RESP.Read()
 		if err != nil {
 			fmt.Println("Failed to convert response:", err)
 			continue
 		}
 
-    fmt.Println("'2'")
     switch respResponse.Typ {
     case "string":
       fmt.Println(respResponse.Str)
@@ -90,6 +88,5 @@ func ConnectToServer(options ConnectionOptions) {
     default:
       fmt.Println("Unknown response type:", respResponse.Typ)
     }
-    fmt.Println("'3'")
 	}
 }
