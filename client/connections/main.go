@@ -1,13 +1,13 @@
 package connections
 
 import (
-  "bufio"
-  "fmt"
-  "net"
-  "os"
-  "strings"
+	"bufio"
+	"fmt"
+	"net"
+	"os"
+	"strings"
 
-  "github.com/piratey7007/rediss/lib/resp"
+	"github.com/piratey7007/rediss/lib/RESP"
 )
 
 type ConnectionOptions struct {
@@ -26,7 +26,7 @@ func ConnectToServer(options ConnectionOptions) {
   defer conn.Close()
 
   scanner := bufio.NewScanner(os.Stdin)
-  resp := resp.NewResp(conn)
+  RESP := resp.NewResp(conn)
   fmt.Println("Connected to Redis server. You may start typing commands.")
 
   for {
@@ -45,19 +45,30 @@ func ConnectToServer(options ConnectionOptions) {
       break
     }
 
-    value, err := resp.Read()
-    if err != nil {
-      fmt.Println("Failed to convert command:", err)
-      continue
-    }
-    
-    if _, err := conn.Write([]byte(respCommand)); err != nil {
-      fmt.Println("Failed to send to Redis:", err)
-      continue 
+    elems := strings.Split(input, " ")
+
+    value := resp.Value{
+      Typ: "array",
+      Array: []resp.Value{},
     }
 
-    //respResponse, err := resp.ConvertFromRESP(responseReader)
-    respResponse, err := resp.Read()
+    for _, elem := range elems {
+      value.Array = append(value.Array, resp.Value{
+        Typ: "bulk",
+        Bulk: elem,
+      })
+    }
+
+    bytes := value.Marshal()
+    fmt.Println("bytes:", bytes)
+    fmt.Println("string(bytes):", string(bytes))
+
+    if _, err := conn.Write(bytes); err != nil {
+      fmt.Println("Failed to send to Redis:", err)
+      continue
+    }
+
+    respResponse, err := RESP.Read()
     if err != nil {
       fmt.Println("Failed to convert response:", err)
       continue
