@@ -2,6 +2,8 @@ module github.com/piratey7007/rediss/client
 
 go 1.21.1
 
+require github.com/piratey7007/rediss/lib v0.1.0
+
 require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.17.0
@@ -29,3 +31,5 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/piratey7007/rediss/lib => ../lib

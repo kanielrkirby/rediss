@@ -66,7 +66,7 @@ func handleConnection(conn net.Conn, aof *Aof) {
 		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
-      if strings.HasSuffix(err.Error(), "EOF") {
+      if err.Error() == "EOF" {
         fmt.Println("Connection closed")
 				return
 			}

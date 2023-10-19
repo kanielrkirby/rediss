@@ -63,3 +63,12 @@ build-client:
 	go build -o ./rediss-cli *.go
 
 
+# Dev
+
+dev-server: setup-server-dev
+	cd ./server && \
+	go run *.go
+
+dev-client: setup-client-dev
+	cd ./client && \
+	go run *.go
