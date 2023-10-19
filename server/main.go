@@ -120,11 +120,7 @@ func handleConnection(conn net.Conn, aof *Aof) {
 			aof.Write(value)
 		}
 
-    fmt.Println("___________________________________Command: ", command)
-
 		result := cmd.Execute(args)
-
-    fmt.Println("___________________________________Result: ", result)
 
 		writer.Write(result)
 	}
