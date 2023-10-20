@@ -13,7 +13,12 @@ import (
 	"github.com/piratey7007/rediss/lib/resp"
 	"github.com/piratey7007/rediss/server/commands"
 	"github.com/piratey7007/rediss/server/messages"
+  "github.com/piratey7007/rediss/server/db"
 )
+
+var options struct {
+  AppendOnly bool
+}
 
 func main() {
 	fmt.Println(messages.RpStartup(messages.Options{
@@ -33,13 +38,21 @@ func main() {
 		return
 	}
 
-	aof, err := NewAof("database.aof")
-	if err != nil {
-		fmt.Println(rerror.ErrWrap(err).FormatAndError("Error creating aof file"))
-		return
-	}
-	defer aof.Close()
+  // Read into memory
+  if options.AppendOnly == true {
+    db.DB, err = db.NewAof(db.AofOptions{
+      Path: "database.aof",
+    })
+    db.DB.Load()
+  } else {
+    db.DB, err = db.NewRdb(db.RdbOptions{
+      Path: "database.rdb",
+      Interval: 10,
+    })
+    db.DB.Load()
+  }
 
+  // Execute AOF file
 	aof.Read(func(value Value) {
 		commandName := value.Array[0].Bulk
 		args := value.Array[1:]
@@ -53,11 +66,8 @@ func main() {
 		cmd.Execute(args)
 	})
 
-  interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
-
-	connChan := make(chan net.Conn)
-
+  // Go routine to accept connections
+  connChan := make(chan net.Conn)
 	go func() {
 		for {
 			conn, err := l.Accept()
@@ -69,6 +79,11 @@ func main() {
 		}
 	}()
 
+  // Handle interrupt
+  interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+  // Main thread
   for {
     select {
       case conn := <-connChan:
@@ -136,9 +151,11 @@ func handleConnection(conn net.Conn, aof *Aof) {
 			continue
 		}
 
-		if command == "set" || command == "hset" {
-			aof.Write(value)
-		}
+    if aof, ok := db.DB.(*db.Aof); ok {
+      if command == "set" || command == "hset" {
+        aof.Write(value)
+      }
+    }
 
 		result := cmd.Execute(args)
 
