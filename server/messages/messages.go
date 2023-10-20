@@ -17,24 +17,20 @@ type Options struct {
 func RpStartup(options Options) string {
 	var builder CustomBuilder
 
-	now := func() string {
-		return time.Now().Format("02 Jan 2006 15:04:05.000")
-	}
-
-	start := func() string {
-		return options.Pid + ": " + now()
+	prefix := func() string {
+		return options.Pid + ": " + time.Now().Format("02 Jan 2006 15:04:05.000")
 	}
 
 	configLine := func() string {
 		if options.ConfigFile {
-			return start() + " # Warning: no config file specified, using the default config. In order to specify a config file use redis-server"
+			return prefix() + " # Warning: no config file specified, using the default config. In order to specify a config file use redis-server"
 		} else {
-			return start() + " # Warning: no config file specified, using the default config. In order to specify a config file use redis-server"
+			return prefix() + " # Warning: no config file specified, using the default config. In order to specify a config file use redis-server"
 		}
 	}
 
-	builder.WriteString(start() + " * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo")
-	builder.WriteFString("%s * Redis version=%s, bits=%s, commit=%s, modified=%s, options.Pid=%s, just started", start(), options.Version, options.Bits, options.Commit, options.Modified, options.Pid)
+	builder.WriteString(prefix() + " * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo")
+	builder.WriteFString("%s * Redis version=%s, bits=%s, commit=%s, modified=%s, options.Pid=%s, just started", prefix(), options.Version, options.Bits, options.Commit, options.Modified, options.Pid)
 	builder.WriteString(configLine())
 
 	builder.WriteString("                _._")
@@ -55,8 +51,8 @@ func RpStartup(options Options) string {
 	builder.WriteString("          `-._        _.-'")
 	builder.WriteString("              `-.__.-'")
 
-	builder.WriteString(start() + " * Server initialized")
-	builder.WriteString(start() + " * Ready to accept connections")
+	builder.WriteString(prefix() + " * Server initialized")
+	builder.WriteString(prefix() + " * Ready to accept connections")
 
 	return builder.String()
 }
