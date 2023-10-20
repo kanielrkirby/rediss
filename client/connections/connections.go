@@ -27,6 +27,8 @@ func ConnectToServer(options ConnectionOptions) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	RESP := resp.NewResp(conn)
+  fmt.Println(conn.LocalAddr().String())
+  fmt.Println(conn.LocalAddr().Network())
 	fmt.Println("Connected to Redis server. You may start typing commands.")
 
 	for {
@@ -34,8 +36,8 @@ func ConnectToServer(options ConnectionOptions) {
 
 		if !scanner.Scan() {
 			if err := scanner.Err(); err != nil {
-				fmt.Fprintf(os.Stderr, "Error reading from input: %s\n", err)
-				os.Exit(1)
+        fmt.Println("Error: Server closed the connection.")
+        fmt.Println("not connected>")
 			}
 			break
 		}

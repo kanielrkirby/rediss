@@ -3,16 +3,28 @@ package main
 import (
 	"fmt"
 	"net"
+	"os"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 
-	"github.com/piratey7007/rediss/server/commands"
 	"github.com/piratey7007/rediss/lib/rerror"
 	"github.com/piratey7007/rediss/lib/resp"
+	"github.com/piratey7007/rediss/server/commands"
+	"github.com/piratey7007/rediss/server/messages"
 )
 
 func main() {
-	fmt.Println("Listening on port :6379")
+	fmt.Println(messages.RpStartup(messages.Options{
+		Version:    "7.2.1",
+		Bits:       "64",
+		Commit:     "00000000",
+		Modified:   "0",
+		Pid:        "93873",
+		Port:       "6379",
+		ConfigFile: false,
+	}))
 
 	l, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -41,6 +53,9 @@ func main() {
 		cmd.Execute(args)
 	})
 
+  interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
 	connChan := make(chan net.Conn)
 
 	go func() {
@@ -54,10 +69,15 @@ func main() {
 		}
 	}()
 
-	for conn := range connChan {
-		go handleConnection(conn, aof)
-	}
-
+  for {
+    select {
+      case conn := <-connChan:
+        go handleConnection(conn, aof)
+      case <-interrupt:
+        fmt.Println("Shutting down...")
+        return
+    }
+  }
 }
 
 func handleConnection(conn net.Conn, aof *Aof) {
@@ -66,8 +86,8 @@ func handleConnection(conn net.Conn, aof *Aof) {
 		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
-      if err.Error() == "EOF" {
-        fmt.Println("Connection closed")
+			if err.Error() == "EOF" {
+				fmt.Println("Connection closed")
 				return
 			}
 			errString := rerror.ErrInternal.FormatAndError("Error reading value")

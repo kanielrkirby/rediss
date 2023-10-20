@@ -55,7 +55,7 @@ var (
 	// ErrUnknownSubcommand is used to indicate that the subcommand is not known. Provide "Subcommand" and "Command" to format the message.
 	ErrUnknownSubcommand = defineError("UNKNOWN_SUBCOMMAND", "Unknown subcommand '%s'. Try %s HELP.")
 	// ErrWrongNumberOfArguments is used to indicate that the wrong number of arguments were provided. Provide "Subcommand" and "Command" to format the message.
-	ErrWrongNumberOfArguments = defineError("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try %s HELP.")
+	ErrWrongNumberOfArguments = defineError("WRONG_NUMBER_OF_ARGUMENTS", "Wrong number of arguments for '%s'. Try using 'help'.")
 	// ErrUnknownType is used to indicate that the type of the value is unknown. Provide "Type" to format the message.
 	ErrUnknownType = defineError("UNKNOWN_TYPE", "Unknown type '%v'.")
 	// ErrWrap is used when no other error code is appropriate. Provide the error and a custom "Message" to format the message.
@@ -65,7 +65,7 @@ var (
 )
 
 // DEBUG is used to determine whether to show the function and line number of the error.
-var DEBUG bool = true
+var DEBUG bool = false
 
 // Error formats the error message using fmt.Sprintf and returns it.
 func (e *RedisError) Error() string {
