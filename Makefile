@@ -65,10 +65,12 @@ build-client:
 
 # Dev
 
+FLAGS :=
+
 dev-server: setup-server-dev
 	cd ./server && \
-	go run *.go
+	go run *.go $(FLAGS)
 
 dev-client: setup-client-dev
 	cd ./client && \
-	go run *.go
+	go run *.go $(FLAGS)
