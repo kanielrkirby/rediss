@@ -14,21 +14,15 @@ import (
 	"github.com/piratey7007/rediss/server/commands"
 	"github.com/piratey7007/rediss/server/messages"
   "github.com/piratey7007/rediss/server/db"
+  "github.com/piratey7007/rediss/server/types"
 )
 
 var options struct {
   AppendOnly bool
 }
 
-type ConnectionOptions struct {
-  Host string
-  Port int
-}
-
-func StartServer(options ConnectionOptions) {
-	fmt.Println(messages.RpStartup(messages.Options{
-		Port:       "6379",
-	}))
+func StartServer(options types.ConnectionOptions) {
+	fmt.Println(messages.RpStartup(options))
 
   l, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -37,13 +31,12 @@ func StartServer(options ConnectionOptions) {
 		return
 	}
 
-  // Read into memory
+  // Read aof into memory
   db.DB, err = db.NewAof(db.AofOptions{
     Path: "database.aof",
     Interval: 1,
   })
 
-  // Execute AOF file
 	db.DB.Read()
 
   // Go routine to accept connections
@@ -75,6 +68,7 @@ func StartServer(options ConnectionOptions) {
   }
 }
 
+// handleConnection handles a single connection
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 	for {

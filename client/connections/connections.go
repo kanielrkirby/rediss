@@ -12,13 +12,11 @@ import (
 
 type ConnectionOptions struct {
 	Host     string
-	Port     int
-	Password string
-	Db       int
+	Port     string
 }
 
 func ConnectToServer(options ConnectionOptions) {
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", options.Host, options.Port))
+	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", options.Host, options.Port))
 	if err != nil {
 		fmt.Println("Failed to connect to Redis", err)
 		return
