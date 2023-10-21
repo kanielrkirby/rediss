@@ -12,9 +12,9 @@ import (
 	"github.com/piratey7007/rediss/lib/rerror"
 	"github.com/piratey7007/rediss/lib/resp"
 	"github.com/piratey7007/rediss/server/commands"
+	"github.com/piratey7007/rediss/server/db"
 	"github.com/piratey7007/rediss/server/messages"
-  "github.com/piratey7007/rediss/server/db"
-  "github.com/piratey7007/rediss/server/types"
+	"github.com/piratey7007/rediss/server/types"
 )
 
 var options struct {
@@ -71,8 +71,12 @@ func StartServer(options types.ConnectionOptions) {
 // handleConnection handles a single connection
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
+
+  RESP := resp.NewResp(conn)
+  writer := resp.NewWriter(conn)
+  commands.Registry.Writer = *writer
+
 	for {
-		RESP := resp.NewResp(conn)
 		value, err := RESP.Read()
 		if err != nil {
 			if err.Error() == "EOF" {
@@ -117,8 +121,6 @@ func handleConnection(conn net.Conn) {
 		if i < len(value.Array) {
 			args = value.Array[i:]
 		}
-
-		writer := resp.NewWriter(conn)
 
 		cmd, exists := commands.Registry.Commands[command]
 		if !exists {

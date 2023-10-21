@@ -31,6 +31,8 @@ type Command struct {
 
 type registry struct {
 	Commands map[string]Command
+  // Writer is ONLY used for pub/sub
+  Writer resp.Writer
 }
 
 var Registry = &registry{

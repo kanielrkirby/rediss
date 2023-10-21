@@ -88,5 +88,36 @@ func ConnectToServer(options ConnectionOptions) {
     default:
       fmt.Println("Unknown response type:", respResponse.Typ)
     }
+
+    if strings.HasPrefix(input, "subscribe") {
+      handleSubscribe(RESP)
+    }
 	}
+}
+
+func handleSubscribe(RESP *resp.Resp) {
+  for {
+    respResponse, err := RESP.Read()
+    if err != nil {
+      fmt.Println("Failed to convert response:", err)
+      continue
+    }
+
+    switch respResponse.Typ {
+    case "string":
+      fmt.Println(respResponse.Str)
+    case "error":
+      fmt.Println("Error:", respResponse.Str)
+    case "bulk":
+      fmt.Println(respResponse.Bulk)
+    case "int":
+      fmt.Println(respResponse.Num)
+    case "array":
+      for _, respResponse := range respResponse.Array {
+        fmt.Println(respResponse.Bulk)
+      }
+    default:
+      fmt.Println("Unknown response type:", respResponse.Typ)
+    }
+  }
 }
