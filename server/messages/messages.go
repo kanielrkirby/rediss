@@ -21,7 +21,7 @@ func RpStartup(options types.ConnectionOptions) string {
 	builder.WriteString("      _.-``    `.  `_.  ''-._           Rediss Clone")
 	builder.WriteString("  .-`` .-```.  ```\\/    _.,_ ''-._")
 	builder.WriteString(" (    '      ,       .-`  | `,    )     Running in standalone mode")
-	builder.WriteFString(" |`-._`-...-` __...-.``-._|'` _.-'|     Port: %d", options.Port)
+	builder.WriteFString(" |`-._`-...-` __...-.``-._|'` _.-'|     Port: %s", options.Port)
 	builder.WriteString(" |    `-._   `._    /     _.-'    |")
 	builder.WriteString("  `-._    `-._  `-./  _.-'    _.-'")
 	builder.WriteString(" |`-._`-._    `-.__.-'    _.-'_.-'|")
