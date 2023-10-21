@@ -16,7 +16,7 @@ func RpStartup(options Options) string {
 	}
 
 	builder.WriteString(prefix() + " * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo")
-	builder.WriteFString("%s * Redis version=%s, bits=%s, commit=%s, modified=%s, options.Pid=%s, just started", prefix(), options.Version, options.Bits, options.Commit, options.Modified, options.Pid)
+	builder.WriteFString("%s * Rediss, just started", prefix())
 
 	builder.WriteString("                _._")
 	builder.WriteString("           _.-``__ ''-._")
