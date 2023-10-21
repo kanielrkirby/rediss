@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/piratey7007/rediss/server/connections"
 	"github.com/piratey7007/rediss/server/types"
@@ -15,8 +14,8 @@ var rootCmd = &cobra.Command{
 converts them to the Redis Serialization Protocol (RESP), and forwards them to the Rediss server.`,
 	Run: func(cmd *cobra.Command, args []string) {
     options := types.ConnectionOptions{
-      Host: viper.GetString("bind"),
-      Port: viper.GetString("port"),
+      Host: cmd.Flag("bind").Value.String(),
+      Port: cmd.Flag("port").Value.String(),
     }
     connections.StartServer(options)
 	},
