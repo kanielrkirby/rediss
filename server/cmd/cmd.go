@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
   "github.com/spf13/viper"
   
-  "github.com/piratey7007/rediss/client/connections"
+  "github.com/piratey7007/rediss/server/connections"
 )
 
 var rootCmd = &cobra.Command{
@@ -19,7 +17,7 @@ converts them to the Redis Serialization Protocol (RESP), and forwards them to t
       Host: viper.GetString("bind"),
       Port: viper.GetInt("port"),
     }
-    connections.ConnectToServer(options)
+    connections.StartServer(options)
 	},
   
 }
@@ -27,7 +25,7 @@ converts them to the Redis Serialization Protocol (RESP), and forwards them to t
 func init() {
   helpFlag := false
   rootCmd.PersistentFlags().BoolVarP(&helpFlag, "help", "", false, "Help default flag")
-  rootCmd.PersistentFlags().StringP("host", "h", "localhost", "The host to bind to")
+  rootCmd.PersistentFlags().StringP("bind", "b", "localhost", "The host to bind to")
   rootCmd.PersistentFlags().IntP("port", "p", 6379, "The port to bind to")
 }
 

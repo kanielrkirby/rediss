@@ -5,8 +5,7 @@ import (
 )
 
 type Persistence interface {
-  Load() error
-  Read(fn func(value resp.Value)) error
+  Read() error
   Write(value resp.Value) error
   Close(value resp.Value)
 }

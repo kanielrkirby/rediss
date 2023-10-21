@@ -3,7 +3,6 @@ package db
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"sync"
@@ -18,7 +17,6 @@ type Aof struct {
   File *os.File
   Rd *bufio.Reader
   Mu sync.Mutex
-  Path string
   Interval int
 }
 
@@ -57,6 +55,7 @@ func (a *Aof) Close(value resp.Value) {
   a.File.Close()
 }
 
+// Write appends the new command to the aof file.
 func (a *Aof) Write(value resp.Value) error {
   a.Mu.Lock()
   defer a.Mu.Unlock()
