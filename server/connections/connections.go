@@ -24,7 +24,7 @@ var options struct {
 func StartServer(options types.ConnectionOptions) {
 	fmt.Println(messages.RpStartup(options))
 
-  l, err := net.Listen("tcp", fmt.Sprintf(":%s", options.Port))
+  l, err := net.Listen("tcp", fmt.Sprintf("%s:%s", options.Host, options.Port))
 	if err != nil {
 		_, fn, line, _ := runtime.Caller(1)
 		fmt.Println(fn, line, err)
