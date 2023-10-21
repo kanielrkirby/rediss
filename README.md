@@ -11,6 +11,9 @@ Rediss is a simple Redis clone, written completely in Go.
 - [x] Client CLI built with Cobra to communicate with the server.
 - [x] Server CLI built with Cobra to handle the database, AOF, and requests from clients.
 - [x] Makefile to handle building, as well as the dev servers.
+- [x] Completed commands for GET, SET, HGET, HSET, HGETALL, PING, and DEL, as well as unfinished implementations of PUBLISH, SUBSCRIBE, and COMMAND.
+- [x] Support for subcommands, as shown in COMMAND.
+- [x] Custom error handling.
 
 ## Usage
 
