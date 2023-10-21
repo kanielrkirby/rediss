@@ -14,6 +14,15 @@ var rootCmd = &cobra.Command{
 	Long: `A custom, simplified CLI to interact with Rediss server that takes user commands,
 converts them to the Redis Serialization Protocol (RESP), and forwards them to the Rediss server.`,
 	Run: func(cmd *cobra.Command, args []string) {
+    if cmd.Flag("command").Value.String() != "" {
+      options := connections.ConnectionOptions{
+        Host: cmd.Flag("host").Value.String(),
+        Port: cmd.Flag("port").Value.String(),
+        Command: cmd.Flag("command").Value.String(),
+      }
+      connections.ConnectToServer(options)
+      return
+    }
     fmt.Println("Connecting to server...")
     options := connections.ConnectionOptions{
       Host: cmd.Flag("host").Value.String(),
@@ -26,9 +35,12 @@ converts them to the Redis Serialization Protocol (RESP), and forwards them to t
 
 func init() {
   helpFlag := false
+  commandFlag := ""
   rootCmd.PersistentFlags().BoolVarP(&helpFlag, "help", "", false, "Help default flag")
   rootCmd.PersistentFlags().StringP("host", "h", "localhost", "The host to bind to")
   rootCmd.PersistentFlags().StringP("port", "p", "6379", "The port to bind to")
+  rootCmd.PersistentFlags().StringVarP(&commandFlag, "command", "c", "", "Command to execute")
+
 }
 
 func Run() {

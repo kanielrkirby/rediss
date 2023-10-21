@@ -13,6 +13,7 @@ import (
 type ConnectionOptions struct {
 	Host     string
 	Port     string
+  Command   string
 }
 
 func ConnectToServer(options ConnectionOptions) {
@@ -25,10 +26,53 @@ func ConnectToServer(options ConnectionOptions) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	RESP := resp.NewResp(conn)
-  fmt.Println(conn.LocalAddr().String())
-  fmt.Println(conn.LocalAddr().Network())
-	fmt.Println("Connected to Redis server. You may start typing commands.")
 
+  if options.Command != "" {
+    value := resp.Value{
+      Typ:   "array",
+      Array: []resp.Value{},
+    }
+
+    elems := strings.Split(options.Command, " ")
+
+    for _, elem := range elems {
+      value.Array = append(value.Array, resp.Value{
+        Typ:  "bulk",
+        Bulk: elem,
+      })
+    }
+
+    bytes := value.Marshal()
+
+    if _, err := conn.Write(bytes); err != nil {
+      fmt.Println("Failed to send to Redis:", err)
+    }
+
+    respResponse, err := RESP.Read()
+    if err != nil {
+      fmt.Println("Failed to convert response:", err)
+    }
+
+    switch respResponse.Typ {
+    case "string":
+      fmt.Println(respResponse.Str)
+    case "error":
+      fmt.Println("Error:", respResponse.Str)
+    case "bulk":
+      fmt.Println(respResponse.Bulk)
+    case "int":
+      fmt.Println(respResponse.Num)
+    case "array":
+      for _, respResponse := range respResponse.Array {
+        fmt.Println(respResponse.Bulk)
+      }
+    default:
+      fmt.Println("Unknown response type:", respResponse.Typ)
+    }
+    return
+  }
+
+  fmt.Println("Connected to Redis server. You may start typing commands.")
 	for {
 		fmt.Print("redis-cli> ")
 
