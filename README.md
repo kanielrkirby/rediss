@@ -25,8 +25,8 @@ $ make build
 #### To run the rediss-server and rediss-cli binaries
 
 ```bash
-rediss-cli
-rediss-server
+$ rediss-cli
+$ rediss-server
 ```
 
 #### Supported flags for the rediss-server
