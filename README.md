@@ -73,3 +73,7 @@ There were many great resources that helped me build this project. Here are some
 - [Build Redis from Scratch](https://github.com/ahmedash95/build-redis-from-scratch/)
 - [Redis Github](https://github.com/redis/redis/)
 - And of course, [Sina](https://sina.khodaveisi.com/), who challenged me to a competition to build a Redis clone better than his in a week. Here's [his version in C++](https://github.com/sinasun/redis-from-scratch-cpp).
+
+## Contributions
+
+This project is mostly meant as a short-term learning opportunity, but feel free to fork it to your own repo!
