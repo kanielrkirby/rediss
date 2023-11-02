@@ -1,5 +1,9 @@
 # Rediss
 
+![](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![](https://img.shields.io/badge/Cobra_CLI-221111?style=for-the-badge&logoColor=white)
+![](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+
 Rediss is a simple Redis clone, written completely in Go.
 
 ## Features
